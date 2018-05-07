@@ -3,20 +3,38 @@ import React, {Component} from 'react';
 import Aux from '../../hoc/Auxulary';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Buttons/Buttons';
-
+import Axios from '../../Axios';
 class Signup extends Component {
 
+    state ={
+       form:{ user_id:null,
+        name:null,
+        email:null,
+        password:null
+       }
+    }
+
     Signup = () =>{
-        alert()
+        Axios.post('/api/signup', this.state).then( (data)=>{
+            console.log(data)
+        }).catch((err)=>{
+            console.log(err)
+        })
     }
 
     changeHandler = (e) => {
-        console.log(e.target.value)
+        let value = e.target.value
+       this.setState({
+            form:{
+            [e.target.name]:value
+            }
+        });
+        
     }
 
     render(){
         return(
-            <Aux><form onSubmit={this.Signup}>
+            <Aux><form>
 
                 <div className="row">
                     <div className="col-md-6 offset-md-3 m-t-100">
@@ -28,7 +46,7 @@ class Signup extends Component {
                             <Input classes="form-control" change={this.changeHandler} name="name" placeholder="Enter your Name"/>
                             <Input classes="form-control" change={this.changeHandler} inpType="email" name="name" placeholder="Enter your email"/>
                             <Input classes="form-control" change={this.changeHandler} inpType="password" placeholder="Enter your password"/>
-                            <Button classes="btn btn-primary" btnType="submit">Sign Up</Button>
+                            <Button classes="btn btn-primary" clicked={this.Signup}>Sign Up</Button>
                         </div>
                         </div>
                     </div>

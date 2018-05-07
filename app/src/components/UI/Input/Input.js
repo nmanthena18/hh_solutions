@@ -8,7 +8,8 @@ const Input = (props) =>{
             disabled={props.disabled}
             type={props.inpType || 'text'}
             className={props.classes} 
-            placeholder={props.placeholder}/>
+            placeholder={props.placeholder}
+            name={props.name}/>
         </div>
     )
 }
