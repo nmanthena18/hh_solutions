@@ -3,3 +3,10 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+
+@media (min-width: 992px) { 
+  .m-t-100{
+    margin-top: 100px;
+  }
+}

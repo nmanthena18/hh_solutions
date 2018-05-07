@@ -4,17 +4,33 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// var index = require('./routes/index');
-// var users = require('./routes/users');
+var getConnection = require('./backend/config/connectionPool')
 
 var app = express();
 
-//view engine setup
-app.use(express.static(__dirname + '/app/build'));
-app.engine('html', require('ejs').renderFile);
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/app/build/index2.html');
-});
+const Router = require('./backend/routes/router')
+
+//app.use(express.static(__dirname + '/app/build'));
+// app.use(express.static(__dirname + '/public'));
+// app.engine('html', require('ejs').renderFile);
+// app.get('/', function (req, res) {
+  //   res.sendFile('index.html');
+  // });
+  
+  app.use(express.static(path.join(__dirname, 'public')));
+  
+  app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname+ '/index.html'));
+  });
+
+  app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+  
+  app.use('/api', Router)
+
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
