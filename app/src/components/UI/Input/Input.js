@@ -7,7 +7,8 @@ const Input = (props) =>{
             onChange={props.change}
             disabled={props.disabled}
             type={props.inpType || 'text'}
-            className={props.classes} />
+            className={props.classes} 
+            placeholder={props.placeholder}/>
         </div>
     )
 }
