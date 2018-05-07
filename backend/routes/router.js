@@ -9,7 +9,7 @@ Router.get('/test', function(req,res){
 });
 
 //Register user
-Router.post('/signup', (req, res) =>{
+Router.post('/signup ', (req, res) =>{
   Tasks.signUp(res, (err,rows)=>{
     return res.json(rows);
   });
