@@ -9,14 +9,18 @@
 </form>
 
 <script>
-    $(function(){
-        $.post( "api/signup", function() {
+     $(function(){
+        $.post( "api/test", 
+        {name:"456456456"},
+        function() {
+            
         alert( "success" );
         })
         .done(function() {
             alert( "second success" );
         })
-        .fail(function() {
+        .fail(function(err) {
+            console.log(err)
             alert( "error" );
         })
         .always(function() {

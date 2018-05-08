@@ -18,9 +18,9 @@ state = {
       <BrowserRouter>
         <div className="container">
           <Aux session={this.state.session}>
-            <Route path='/' exact component={Dashboard} />
-            <Route path='/login' component={Auth} />
-            <Route path='/signup' component={Signup} />
+            <Route path='/' exact component={Auth} />
+            <Route path='/dashboard' component={Dashboard} />
+            <Route path='/register' component={Signup} />
           </Aux>
         </div>
       </BrowserRouter>

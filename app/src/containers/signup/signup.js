@@ -4,6 +4,8 @@ import Aux from '../../hoc/Auxulary';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Buttons/Buttons';
 import Axios from '../../Axios';
+import Alert from '../../components/UI/Alert/Alert';
+
 class Signup extends Component {
 
     state ={
@@ -14,22 +16,32 @@ class Signup extends Component {
        }
     }
 
-    Signup = () =>{
-        Axios.post('/api/signup', this.state).then( (data)=>{
+    signUp = () =>{
+        Axios.post('/api/signup', this.state.form).then( (data)=>{
+            this.setState({
+                successuser:true,
+                userMsg:"New user created successfuly .!",
+                alertClass:"alert-success"
+            });
+
             console.log(data)
         }).catch((err)=>{
-            console.log(err)
+            this.setState({
+                successuser:true,
+                userMsg:err.response.data.message,
+                alertClass:"alert-danger"
+            })
         })
     }
 
     changeHandler = (e) => {
-        let value = e.target.value
+        let value = e.target.value;
+        let form = "form";
+        let obj = {...this.state.form}
+        obj[e.target.name]=value
        this.setState({
-            form:{
-            [e.target.name]:value
-            }
-        });
-        
+            form:obj
+        });        
     }
 
     render(){
@@ -44,9 +56,11 @@ class Signup extends Component {
                         <div className="card-body">
                             <Input classes="form-control" change={(e)=>this.changeHandler(e)} name="user_id" placeholder="Enter your Id"/>
                             <Input classes="form-control" change={this.changeHandler} name="name" placeholder="Enter your Name"/>
-                            <Input classes="form-control" change={this.changeHandler} inpType="email" name="name" placeholder="Enter your email"/>
-                            <Input classes="form-control" change={this.changeHandler} inpType="password" placeholder="Enter your password"/>
-                            <Button classes="btn btn-primary" clicked={this.Signup}>Sign Up</Button>
+                            <Input classes="form-control" change={this.changeHandler} inpType="email" name="email" placeholder="Enter your email"/>
+                            <Input classes="form-control" change={this.changeHandler} inpType="password" name="password" placeholder="Enter your password"/>
+                            <Button classes="btn btn-primary" clicked={this.signUp}>Sign Up</Button>
+                            {}
+                            <Alert classes={this.state.alertClass} show={this.state.successuser}>{this.state.userMsg}</Alert>
                         </div>
                         </div>
                     </div>

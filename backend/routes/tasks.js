@@ -1,9 +1,10 @@
 
 const cPool = require('../config/connectionPool');
-var jwt = require('jsonwebtoken');
+var bcrypt = require('bcrypt');
 
 var Tasks={ 
-	getAllUsers:function(res, callback){
+	getAllUsers:function(req, res, callback){
+		
 		cPool(res, (connect) =>{
 			connect.query('SELECT * from users;',(err, rows)=> {
 				connect.release();
@@ -11,35 +12,43 @@ var Tasks={
 			});
 		});
 	},
-	signUp:function(res, callback){
-		var sql = "INSERT INTO `users`(`user_id`,`name`,`created_date`,`modified_date`, `email`,`password`) VALUES ('9999','" + "1" + "','" + "123" +"','" + null + "','" +"data.email"+ "','" +"data.encrypted_pass"+ "')";
+	signUp:function(req, res, callback){
+		let data = req.body;
+		bcrypt.genSalt(7, function(err, salt) {
+			bcrypt.hash(data.password, salt, function(err, hash) {
+				if(err) pass  = err;
+				cPool(res, (connect) =>{
+					var sql = "INSERT INTO `users`(`user_id`,`name`,`modified_date`, `email`,`password`) VALUES ('"+data.user_id+"','"+data.name+"','','"+data.email+"','" +hash+ "')";
+					connect.query(sql,(err, rows)=> {
+						connect.release();
+						return callback(err,rows)
+					});
+				});
+			});
+		});
+		
+	},
+
+	signIn:(req, res, callback) =>{
+		let uName = req.body.user_id;
 		cPool(res, (connect) =>{
-			connect.query(sql,(err, rows)=> {
+			connect.query('SELECT * from users where user_id = '+uName,(err, rows)=> {
 				connect.release();
-				return callback(err,rows)
+				if(err) return callback(err,'');
+				if(rows.length > 0){
+					bcrypt.compare(req.body.password, rows[0].password, function(err, res) {
+						res ? callback(err,rows) : callback(err,[]);
+					});
+				}else{
+					return callback(err,rows);
+				}
 			});
 		});
 	},
-
-	// signUp: (res, classback) => {
-	// 	let pwd = jwt.sign({ foo: 'bar' }, cert, { algorithm: 'RS256' }, function(err, token) {
-	// 		return token;
-	// 	});
-
-	// 	let data ={
-	// 		fname:"some",
-	// 		email:"asdasdsa@co.com",
-	// 		encrypted_pass: pwd
-	// 	}
-	// 	var d = new Date();
-	// 	let date = d.getDate();
-	// 	var sql = "INSERT INTO `users`(`user_id`,`name`,`created_date`,`modified_date`, `email`,`password`) VALUES ('9999','" + data.fname + "','" + data.date +"','" + null + "','" +data.email+ "','" +data.encrypted_pass+ "')";
-	// 	cPool(res, (connect) =>{
-	// 		connect.query(sql,(err, rows)=> {
-	// 			connect.release();
-	// 			return callback(err,rows)
-	// 		});
-	// 	});
-	// },
+	logOut:(req, res, callback) =>{
+		cPool(res, (connect) =>{
+			connect.release();
+		});
+	}
 };
  module.exports=Tasks;

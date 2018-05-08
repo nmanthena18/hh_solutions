@@ -4,6 +4,7 @@ const Input = (props) =>{
     return (
         <div className="form-group">
         <input 
+            autoComplete="nope"
             onChange={props.change}
             disabled={props.disabled}
             type={props.inpType || 'text'}
