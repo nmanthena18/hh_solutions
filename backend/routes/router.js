@@ -8,46 +8,47 @@ var jwt = require('jsonwebtoken');
 //Register user
 Router.post('/signup', (req, res) =>{
   Tasks.signUp(req, res, (err,rows)=>{
-    if(err) res.status(400).send({error:err.code, message:err.sqlMessage});
+    if(err) res.status(400).send({message:"Something went wrong"});
     return res.json(rows);
   });
 });
 
 //Login
 Router.post('/login', function(req,res){
-  console.log(req.session)
   Tasks.signIn(req, res, (err,rows)=>{
     if(err) return res.status(400).send({error:err.code, message:err.sqlMessage});
-    if(rows.length <= 0) return res.status(400).send({error:"404", message:"Invalid Credentials"});
+    if(rows.length <= 0) return res.status(400).send({message:"Invalid Credentials"});
     var token = jwt.sign({ id: rows[0].user_id }, 'heydonttrustme', {
       expiresIn: 6000 
     });
-    req.session = token;
-    res.status(200).send({ auth: true, token: token, rows:rows });
+    req.session.user = rows[0].user_id;
+    res.status(200).send({user_id:rows[0].user_id, name:rows[0].name, email:rows[0].email, message:"Successfully loggeding"});
   });
 });
 
 //test
 Router.get('/test', function(req,res){
-  //sessionChecker(req.session)
-  Tasks.getAllUsers(req, res, (err,rows)=>{
-    if(err) return res.status(400).send({error:err.code, message:err.sqlMessage});
-    return res.json(rows)
-  });
+  if(isLoggeIn(req, res)){
+    Tasks.getAllUsers(req, res, (err,rows)=>{
+      if(err) return res.status(400).send({message: "Something went wrong"});
+      return res.json(rows)
+    });
+  }
 });
 
 
 //Logout
-Router.post('/logout', function(req,res){
-  Tasks.logOut(req, res, (err,rows)=>{
-    res.status(200).send({ auth: false, token: null });
+Router.get('/logout', function(req,res){
+ req.session.destroy(function(err) {
+    //res.redirect('/hello')
   });
+  res.status(200).send({message: "Logout Successfully"});
 });
 
 
-sessionChecker = (session) =>{
-  if(session.email) return true;
+isLoggeIn = (req, res) => {
+ if(!req.session.user) {res.status(401).send({message: "Not authorized"}) }
+ else true
 }
-
  
  module.exports=Router;

@@ -5,7 +5,7 @@ import './App.css';
 import Auth from './containers/auth/auth';
 import Dashboard from './containers/dashboard/dashboard';
 import Aux from './hoc/Auxulary';
-import Signup from './containers/signup/signup'
+import Signup from './containers/Signup/Signup';
 
 class App extends Component {
 

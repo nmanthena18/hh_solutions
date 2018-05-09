@@ -11,22 +11,21 @@ var app = express();
 
 const Router = require('./backend/routes/router')
 
-//app.use(express.static(__dirname + '/app/build'));
-// app.use(express.static(__dirname + '/public'));
-// app.engine('html', require('ejs').renderFile);
-// app.get('/', function (req, res) {
-  //   res.sendFile('index.html');
+app.use(express.static(__dirname + '/app/build'));
+app.engine('html', require('ejs').renderFile);
+app.get('/', function (req, res) {
+    res.sendFile('index.html');
+});
+  
+  //app.use(express.static(path.join(__dirname, 'public')));
+  // app.get('/', function (req, res) {
+  //   res.sendFile(path.join(__dirname+ '/index.html'));
   // });
-  
-  app.use(express.static(path.join(__dirname, 'public')));
-  
-  app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname+ '/index.html'));
-  });
 
   app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Content-Type", "text/html")
     next();
   });
   
@@ -39,36 +38,40 @@ const Router = require('./backend/routes/router')
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
-//******SESSION Handle *//
-app.use(session({
-  key: 'user_sid',
-  secret: 'shhhhh',
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-      expires: 6000
-  }
-}));
-//******SESSION Handle *//
+
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/api', Router);
-// app.use('/', index);
-// app.use('/users', users);
 
-
-
-// app.use((req, res, next) => {
-//   if (req.cookies.user_sid && !req.session.user) {
-//       res.clearCookie('user_sid');        
-//   }
-//   next();
-// });
 //******SESSION Handle *//
+// app.use(session({
+//   cookie: {
+//     path    : '/api',
+//     httpOnly: false,
+//     maxAge  : 24*60*60*1000
+//   },
+//   secret: '1234567890QWERT',
+//   saveUninitialized:false,
+//   resave:false
+// }));
+app.use(session({
+  secret: '1234567890QWERT',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { 
+    secure: false,
+    path:"/api",
+    maxAge  : 6000,
+    sameSite:true
+   }
+}));
+
+//******SESSION Handle *//
+app.use('/api', Router);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

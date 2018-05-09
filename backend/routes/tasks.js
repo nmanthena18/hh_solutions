@@ -4,7 +4,6 @@ var bcrypt = require('bcrypt');
 
 var Tasks={ 
 	getAllUsers:function(req, res, callback){
-		
 		cPool(res, (connect) =>{
 			connect.query('SELECT * from users;',(err, rows)=> {
 				connect.release();
@@ -30,14 +29,16 @@ var Tasks={
 	},
 
 	signIn:(req, res, callback) =>{
-		let uName = req.body.user_id;
+		let uName = req.body.user_id;		
 		cPool(res, (connect) =>{
 			connect.query('SELECT * from users where user_id = '+uName,(err, rows)=> {
 				connect.release();
 				if(err) return callback(err,'');
 				if(rows.length > 0){
 					bcrypt.compare(req.body.password, rows[0].password, function(err, res) {
-						res ? callback(err,rows) : callback(err,[]);
+						if(res){
+							callback(err,rows);
+						 }
 					});
 				}else{
 					return callback(err,rows);
@@ -45,10 +46,7 @@ var Tasks={
 			});
 		});
 	},
-	logOut:(req, res, callback) =>{
-		cPool(res, (connect) =>{
-			connect.release();
-		});
-	}
+
 };
+
  module.exports=Tasks;

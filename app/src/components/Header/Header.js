@@ -1,16 +1,16 @@
 import React from 'react';
+import Button from '../UI/Buttons/Buttons';
 
 const Header = (props) =>{
     return(
         <div>
-            <ul class="nav">
-                <li class="nav-item">
-                    <Link to="/login" activeClassName="active"> Login </Link>
-                </li>
-                <li class="nav-item">
-                    <Link to="/signup" activeClassName="active"> Sign Up </Link>
-                </li>
-            </ul>
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                <span className="navbar-brand mr-auto p-2 bd-highlight" href="#"> Welcome to Hanuman Hardwares</span>
+                <div className="bd-highlight">
+                    <Button classes="btn btn-primary" clicked={props.logoutHandler}>Logout</Button>
+                </div>
+                {props.children}
+            </nav>
         </div>
     )
 }

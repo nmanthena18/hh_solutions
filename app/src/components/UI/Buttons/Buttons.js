@@ -2,7 +2,6 @@ import React from 'react';
 
 const Button = (props) =>{
     return (
-        <div className="form-group">
             <button
                 onClick={props.clicked}
                 disabled={props.disabled}
@@ -10,7 +9,6 @@ const Button = (props) =>{
                 className={props.classes}>
                 {props.children}
             </button>
-        </div>
     )
 }
 
