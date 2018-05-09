@@ -6,8 +6,35 @@ import Button from '../../components/UI/Buttons/Buttons';
 import Axios from '../../Axios';
 import Card from '../../components/UI/card/card';
 import Modal from '../../components/UI/Modal/Modal';
+import Input from '../../components/UI/Input/Input';
+import Aux from '../../hoc/Auxulary';
 
 class Dashboard extends Component {
+    state = {
+        dashboardItems:{
+            billing:{
+                name:"Billing",
+                icon:"fa-hand-holding-usd",
+                ids:1
+            },
+            addproduct:{
+                name:"Add Product",
+                icon:"fa-edit" ,
+                ids:2           
+            },
+            availQty:{
+                name:"Get All Products Details",
+                icon:"fa-stack-overflow" ,
+                ids:3             
+            },
+            billHistory:{
+                name:"Get Bill History",
+                icon:"fa-history",
+                ids:4              
+            }
+        },
+        showModel:null
+    }
     Logout = () =>{
         Axios.get('/api/logout').then(res =>{
             console.log(res)
@@ -16,51 +43,60 @@ class Dashboard extends Component {
         })
         this.setState({session:false});
     }
+
     render(){
+        let dashboardAction = [{...this.state.dashboardItems}]
+        let cards = dashboardAction.map( (items, i) => {
+            let eachCard =[]
+            for(let item in items){
+                eachCard.push( <div className="col" key={item}>
+                <Card title={items[item].name}>
+                    <Button classes="btn btn-primary" clicked={ this.AddItem.bind(this, item)}>{items[item].name}</Button>
+                    <i className={"fas fa-5x float-right " + items[item].icon}></i>
+                </Card>
+                </div>
+               )
+            }
+
+            return eachCard;
+            
+        });
+
+        const addproduct = (
+            <Aux>
+                <Input name="name" inpType="text" />
+                <Input name="prd_code" inpType="text" />
+                <Input name="prd_shortname" inpType="text" />
+                <Input name="prd_price" inpType="text" />
+                <Input name="prd_qty" inpType="text" />
+                <Input name="prd_gst" inpType="text" />
+                <Button>Add Product </Button>
+            </Aux>
+        );
         return(
             <div>
                 <Header logoutHandler={this.Logout} />  
                 <div className="row dashboard">
-                    <div className="col">
-                        <Card title="Billing">
-                            <Button classes="btn btn-primary">Generate Bill</Button>
-                            <i className="fas fa-hand-holding-usd fa-5x float-right"></i>
-                        </Card>
-                    </div>
-                    <div className="col">
-                        <Card title="Add/Update Item">
-                            <Button classes="btn btn-primary">Add / Update Item</Button>
-                            <i className="fas fa-edit fa-5x float-right"></i>
-                        </Card>
-                    </div>
+                    {cards}
                 </div>
-                <div className="row">
-                    <div className="col"><p></p><p></p></div>
-                </div>
-                <div className="row">
-                    <div className="col">                
-                        <Card title="Get Quantities">
-                            <Button classes="btn btn-primary">Get Available Stock</Button>
-                            <i className="fab fa-stack-overflow fa-5x float-right"></i>
-                        </Card>
-                    </div>
-                    <div className="col">
-                        <Card title="Bill History">
-                            <Button classes="btn btn-primary">Get All Billing History</Button>
-                            <i className="fas fa-history fa-5x float-right"></i>
-                        </Card>
-                    </div>
-                </div>
-                <Modal show="true" title="Add Product">
-                    14456465456
+                <Modal title="Add Product" show={this.state.showModel}>
+                    {this.state.dashboardItems[this.state.showModel]  }
                 </Modal>
             </div>
         )
     }
 
     //Add/Edit item 
-    AddItem = () =>{
-        
+    AddItem = (e, n) =>{
+        // let obj = {...this.state.dashboardItems}
+        // console.log(e)
+        // let show = this.state.dashboardItems[e];
+        console.log(e)
+        this.setState({
+            showModel:e
+        });
+
+        console.log(this.state)
     }
 }
 
