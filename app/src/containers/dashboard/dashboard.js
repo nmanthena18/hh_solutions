@@ -80,7 +80,7 @@ class Dashboard extends Component {
                     {cards}
                 </div>
                 <Modal title="Add Product" show={this.state.showModel}>
-                    {this.state.dashboardItems[this.state.showModel]  }
+                    {this.state.showModel == "addproduct" ? addproduct : null  }
                 </Modal>
             </div>
         )
