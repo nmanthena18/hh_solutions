@@ -1,4 +1,5 @@
 import React from 'react';
+import Aux from '../../../hoc/Auxulary'
 
 const Input = (props) =>{
     let ElementClasses = [props.classes]
@@ -26,15 +27,16 @@ const Input = (props) =>{
             {props.children} </select>
             break;
         default : 
-            Element =<input 
-            autoComplete="nope"
-            onChange={props.change}
-            disabled={props.disabled}
-            type={props.inpType || 'text'}
-            className={ElementClasses.join(' ')} 
-            placeholder={props.placeholder}
-            name={props.name}/>
-            {props.children}            
+            Element =<Aux><input 
+                    autoComplete="nope"
+                    onChange={props.change}
+                    disabled={props.disabled}
+                    type={props.inpType || 'text'}
+                    className={ElementClasses.join(' ')} 
+                    placeholder={props.placeholder}
+                    name={props.name}/>
+                    {props.children} 
+                    </Aux>         
     }
     return (
         <div className={props.inputGroupSymbol ? "input-group" :"form-group" }>

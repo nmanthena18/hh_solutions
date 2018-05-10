@@ -5,9 +5,6 @@ import Aux from '../../hoc/Auxulary';
 import Axios from '../../Axios';
 import Header from '../../components/Header/Header';
 import Card from '../../components/UI/card/card';
-import Modal from '../../components/UI/Modal/Modal';
-import Button from '../../components/UI/Buttons/Buttons';
-import Input from '../../components/UI/Input/Input';
 import AddProduct from '../Products/AddProducts';
 
 class Dashboard extends Component {

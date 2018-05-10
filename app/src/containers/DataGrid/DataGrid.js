@@ -1,27 +1,40 @@
 import React, { Component } from 'react';
-import Aux from '../../hoc/Auxulary'
+import Aux from '../../hoc/Auxulary';
+import Columns from './columns';
 
 export default class DataGrid extends Component {
     
     render() {
-        let Row = null;
-        if(this.props.columns){
-           Row = this.props.rowsCount.map( (item, i, arr)=>{
-                return (<div className="row" key={"row"+i}>
-                    {columns}
-                </div>)
+        // this.setState({
+        //     gridData:{...this.props.columns.push(this.props.gridData)}
+        // });
+        
+        const generateColumns = (row) => {
+            let columns = this.props.columns.map((item, i, arr)=>{
+                return <Columns key={item.key} name={row[item.key]}/>
             });
+            return columns;
         }
-        let columns = null
+        
+        
+        let Row, Header = null;
         if(this.props.columns){
-            columns = this.props.columns.map((item, i, arr)=>{
-                return <div className="col" key={"col"+i}>{item.name}</div>
+           Row = this.props.gridData.map( (item, i, arr)=>{
+                return (                
+                    <div className="row" key={"row"+i}>
+                        {generateColumns(item)}
+                    </div>
+                )
             });
-            console.log(columns)
+
+            Header = this.props.columns.map((item, i)=>{
+                return <Columns key={item.key} name={item.name}/>
+            });
         }
         return (
-            <Aux {...this.props}>    
-                        {Row} 
+            <Aux {...this.props}>
+                <div className="row header">{Header}</div>
+                {Row} 
                 {this.props.children}
             </Aux>
         )

@@ -48,7 +48,7 @@ var Tasks={
 	},
 
 	saveProduct:(req, res, callback) =>{
-		let query = "INSERT INTO `hh_solutions`.`products` (`prd_name`, `prd_shortname`, `prd_price`, `prd_qty`, `prd_scode`, `prd_desc`, `prd_gst`) VALUES ('"+req.body.prd_name+"', '"+req.body.prd_scode+"', '"+req.body.prd_shortname+"', '"+req.body.prd_price+"', '"+req.body.prd_qty+"', '"+req.body.prd_gst+"', '"+req.body.prd_desc+"');"
+		let query = "INSERT INTO `hh_solutions`.`products` (`prd_name`, `prd_shortname`, `prd_price`, `prd_qty`, `prd_scode`, `prd_gst`, `prd_desc`) VALUES ('"+req.body.prd_name+"', '"+req.body.prd_scode+"', '"+req.body.prd_shortname+"', '"+req.body.prd_price+"', '"+req.body.prd_qty+"', '"+req.body.prd_gst+"', '"+req.body.prd_desc+"');"
 		cPool(res, (connect) =>{
 			connect.query(query,(err, rows)=> {
 				console.log(err)

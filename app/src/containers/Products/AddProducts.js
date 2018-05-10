@@ -128,11 +128,11 @@ class AddProduct extends Component {
                     touched={this.state.formValidation.prd_gst.touched}
                     classes="form-control" inpType="text" /> <br/>
                 <Input name="prd_desc" 
-                    placeholder="Enter Description" value="This is a description."
+                    placeholder="Enter Description"
                     change={(e) => {this.changeHandler(e)}}
                     isInvalid={this.state.formValidation.prd_desc.valid} 
                     touched={this.state.formValidation.prd_desc.touched}
-                    value={this.state.prd_desc}
+                    value={this.state.form.prd_desc}
                     classes="form-control" inpType="textarea">
                     </Input>                
                 <Button classes="btn btn-primary" disabled={!this.state.isFormValid} clicked={() => {this.saveProduct()}}>Save Product </Button> &nbsp;
@@ -171,8 +171,8 @@ class AddProduct extends Component {
                 <Modal title="Add Product" show={this.state.showModel} closeModal={this.closeModal}>
                     {addproduct}
                 </Modal>
-                <DataGrid rowsCount={this.state.rowsCount} columns={this.state.columns}>
-                    {this.state.rowsCount > 0 ?  null : <p>No data Available </p>}
+                <DataGrid gridData={this.state.gridData} columns={this.state.columns}>
+                    {this.state.gridData > 0 ?  null : <p>No data Available </p>}
                 </DataGrid>
             </Aux>
         )
@@ -208,10 +208,10 @@ class AddProduct extends Component {
     //get all products
     loadAllProduct(){
         Axios.get('/api/loadAllPrds').then(res => {
-            if(!this.state.columns && !this.state.rowsCount){
+            if(!this.state.columns && !this.state.gridData){
                 this.setState({
-                    rowsCount : res.data,
-                    columns: [{key:"name", name:"Price"}, {key:"",name:"Available Quantity"}, {key:"scode",name:"Code"}, {key:"desc",name:"Description"}, {key:"gst", name:"GST %"}]
+                    gridData : res.data,
+                    columns: [{key:"prd_name", name:"Name"},{key:"prd_price", name:"Price"}, {key:"prd_qty",name:"Available Quantity"}, {key:"prd_scode",name:"Code"}, {key:"prd_desc",name:"Description"}, {key:"prd_gst", name:"GST %"}]
                 });
             }
         }).catch(err => {
