@@ -18,7 +18,6 @@ export const signUp = () =>{
 
 export const changeHandler = (e) => {
     let value = e.target.value;
-    let form = "form";
     let obj = {...this.state.form}
     obj[e.target.name]=value
    this.setState({

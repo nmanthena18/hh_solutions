@@ -72,7 +72,6 @@ class Signup extends Component {
     
     changeHandler = (e) => {
         let value = e.target.value;
-        let form = "form";
         let obj = {...this.state.form}
         obj[e.target.name]=value;
 
