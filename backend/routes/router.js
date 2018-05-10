@@ -28,14 +28,27 @@ Router.post('/login', function(req,res){
 
 //test
 Router.get('/test', function(req,res){
-  if(isLoggeIn(req, res)){
     Tasks.getAllUsers(req, res, (err,rows)=>{
       if(err) return res.status(400).send({message: "Something went wrong"});
       return res.json(rows)
     });
-  }
 });
 
+//Saving Product
+Router.post('/saveProduct', (req,res) => {
+  Tasks.saveProduct(req, res, (err, rows) =>{
+    if(err) return res.status(400).send({message: "Something went wrong"});
+    res.status(200).send({message: "Product Added Successfully"});
+  })
+});
+
+//Get All products details
+Router.get('/loadAllPrds', (req, res) =>{
+  Tasks.loadAllPrds(req, res, (err, rows)=>{
+    if(err)return res.status(400).send({message: "Something went wrong"});
+    res.status(200).send(rows);
+  })
+})
 
 //Logout
 Router.get('/logout', function(req,res){

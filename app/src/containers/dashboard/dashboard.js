@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import {Route, Link, withRouter} from 'react-router-dom';
 
-import Header from '../../components/Header/Header';
-import Button from '../../components/UI/Buttons/Buttons';
+import Aux from '../../hoc/Auxulary';
 import Axios from '../../Axios';
+import Header from '../../components/Header/Header';
 import Card from '../../components/UI/card/card';
 import Modal from '../../components/UI/Modal/Modal';
+import Button from '../../components/UI/Buttons/Buttons';
 import Input from '../../components/UI/Input/Input';
-import Aux from '../../hoc/Auxulary';
+import AddProduct from '../Products/AddProducts';
 
 class Dashboard extends Component {
     state = {
@@ -43,60 +45,38 @@ class Dashboard extends Component {
         this.setState({session:false});
     }
 
+    componentDidMount(){
+        console.log(this.props)
+    }
+    componentDidUpdate(){
+        console.log(this.props)
+    }
+
     render(){
         let dashboardAction = [{...this.state.dashboardItems}]
         let cards = dashboardAction.map( (items, i) => {
             let eachCard =[]
             for(let item in items){
                 eachCard.push( <div className="col" key={item}>
-                <Card title={items[item].name}>
-                    <Button classes="btn btn-primary" clicked={ this.AddItem.bind(this, item)}>{items[item].name}</Button>
+                <Card title={items[item].name}>                    
+                    <Link className="btn btn-primary" to="/dashboard/addproduct">{items[item].name}</Link>
                     <i className={"fas fa-5x float-right " + items[item].icon}></i>
                 </Card>
                 </div>
                )
             }
-
-            return eachCard;
-            
+            return eachCard;            
         });
-
-        const addproduct = (
-            <Aux>
-                <Input name="name" inpType="text" />
-                <Input name="prd_code" inpType="text" />
-                <Input name="prd_shortname" inpType="text" />
-                <Input name="prd_price" inpType="text" />
-                <Input name="prd_qty" inpType="text" />
-                <Input name="prd_gst" inpType="text" />
-                <Button>Add Product </Button>
-            </Aux>
-        );
         return(
-            <div>
-                <Header logoutHandler={this.Logout} />  
-                <div className="row dashboard">
-                    {cards}
-                </div>
-                <Modal title="Add Product" show={this.state.showModel}>
-                    {this.state.showModel == "addproduct" ? addproduct : null  }
-                </Modal>
-            </div>
+            <Aux>
+                <Header logoutHandler={this.Logout} />
+                <div className="row">                  
+                    { this.props.match.isExact ? <div className="row dashboard"> {cards} </div> : null }    
+                </div>          
+                    <Route path='/dashboard/addproduct' component={AddProduct} /> 
+            </Aux>
         )
-    }
-
-    //Add/Edit item 
-    AddItem = (e, n) =>{
-        // let obj = {...this.state.dashboardItems}
-        // console.log(e)
-        // let show = this.state.dashboardItems[e];
-        console.log(e)
-        this.setState({
-            showModel:e
-        });
-
-        console.log(this.state)
     }
 }
 
-export default Dashboard;
+export default withRouter(Dashboard);
