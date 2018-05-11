@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {Route, Redirect, withRouter } from 'react-router-dom';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import Auth from '../auth/auth';
 
 import Aux from '../../hoc/Auxulary';
 import Modal from '../../components/UI/Modal/Modal';
@@ -80,12 +83,12 @@ class AddProduct extends Component {
                 valid:true,
                 touched:false
             }
-        }
+        },
+        columns: [{key:"prd_name", name:"Name"},{key:"prd_price", name:"Price"}, {key:"prd_qty",name:"Quantity"}, {key:"prd_created_date", name:"Created Date"}, {key:"prd_scode",name:"Code"}, {key:"prd_desc",name:"Description"}, {key:"prd_gst", name:"GST %"}, {key:"prd_id",name:"Edit", action:true}]
     }
 
 
-    render(){
-        this.init();
+    render(){   
         const addproduct = (
             <Aux>
                 <Input name="prd_name" 
@@ -158,29 +161,20 @@ class AddProduct extends Component {
                 <div className="row mt-5">
                     <div className="col-md-2"></div>
                     <div className="col text-center">
-                            <h4>Please type here to filter existing products</h4>
-                        <div className="input-group mb-3">
-                            <input type="text" className="form-control" placeholder="Enter Product Name / Short Name"  />
-                            <div className="input-group-append">
-                                <Button classes="btn btn-primary" type="button">Search</Button>
-                            </div>
-                        </div>
+                        <h4>Please type here to filter existing products</h4> 
+                        <hr/>                       
                     </div>
                     <div className="col-md-2"></div>
                 </div>
                 <Modal title="Add Product" show={this.state.showModel} closeModal={this.closeModal}>
                     {addproduct}
                 </Modal>
-                <DataGrid gridData={this.state.gridData} columns={this.state.columns}>
-                    {this.state.gridData > 0 ?  null : <p>No data Available </p>}
-                </DataGrid>
+                <DataGrid gridData={this.state.gridData} columns={this.state.columns} edit={this.editProduct}/>
+                {this.state.edit ? <Redirect  to={{
+            pathname: '/dashboard/editPrduct/'+this.state.edit,
+          }}/> : null}
             </Aux>
         )
-    }
-
-    // Please call all initial functions in this function 
-    init(){
-        this.loadAllProduct();
     }
 
     //Add/Edit item 
@@ -194,11 +188,24 @@ class AddProduct extends Component {
         this.setState({showModel:false});
     }
 
+    editProduct = (id) =>{
+        this.setState({
+            edit:id
+        })
+    }
+
     saveProduct(){
         Axios.post('/api/saveProduct', this.state.form).then(res => {
             if(res.data.message){
                 this.setState({prd_added:true})
             }
+            if(this.state.prd_added){
+            setTimeout(() => {
+                this.setState({
+                    prd_added:false
+                })
+            }, 2000)
+        }
         }).catch(err => {
             console.log(err);
         });
@@ -208,10 +215,12 @@ class AddProduct extends Component {
     //get all products
     loadAllProduct(){
         Axios.get('/api/loadAllPrds').then(res => {
-            if(!this.state.columns && !this.state.gridData){
+            res.data.map((item, i) => {
+                return  item["prd_created_date"] = new Date(item["prd_created_date"]).toLocaleDateString();
+            });
+            if(!this.state.gridData){
                 this.setState({
-                    gridData : res.data,
-                    columns: [{key:"prd_name", name:"Name"},{key:"prd_price", name:"Price"}, {key:"prd_qty",name:"Available Quantity"}, {key:"prd_scode",name:"Code"}, {key:"prd_desc",name:"Description"}, {key:"prd_gst", name:"GST %"}]
+                    gridData : res.data,                    
                 });
             }
         }).catch(err => {
@@ -249,18 +258,10 @@ class AddProduct extends Component {
             isValid = !isNaN(value) && isValid;
         }
         return isValid;
-    }
-    
-    componentDidUpdate(){
-        if(this.state.prd_added){
-            setTimeout(() => {
-                this.setState({
-                    prd_added:false
-                })
-            }, 2000)
-        }
-    }
-    
+    }   
+    componentDidMount(){
+        this.loadAllProduct();
+    } 
 }
 
-export default AddProduct;
+export default withErrorHandler(AddProduct, Axios);

@@ -1,0 +1,23 @@
+.react-grid{
+    box-shadow: 3px 3px 3px #ccc;
+    padding-left:10px;
+    padding-right:10px;
+    border: solid 1px #ccc;
+    box-sizing: border-box;
+}
+.react-grid .row.header, .react-grid .row.body{
+    font-weight: bold;
+    border-bottom: solid 1px #ccc;
+    box-sizing: border-box;
+    margin-right: -10px;
+    margin-left: -10px;
+    font-size:12px;
+}
+.react-grid .row.body{
+    font-weight: normal;
+}
+.react-grid .react-col{
+    padding-top:5px;
+    padding-bottom:5px;
+    border-right:solid 1px #ccc;
+}

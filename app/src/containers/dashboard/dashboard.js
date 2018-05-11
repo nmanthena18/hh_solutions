@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import {Route, Link, withRouter} from 'react-router-dom';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 import Aux from '../../hoc/Auxulary';
 import Axios from '../../Axios';
 import Header from '../../components/Header/Header';
 import Card from '../../components/UI/card/card';
 import AddProduct from '../Products/AddProducts';
+import Button from '../../components/UI/Buttons/Buttons';
+import EditProduct from '../Products/editProduct';
 
 class Dashboard extends Component {
     state = {
@@ -42,13 +45,6 @@ class Dashboard extends Component {
         this.setState({session:false});
     }
 
-    componentDidMount(){
-        console.log(this.props)
-    }
-    componentDidUpdate(){
-        console.log(this.props)
-    }
-
     render(){
         let dashboardAction = [{...this.state.dashboardItems}]
         let cards = dashboardAction.map( (items, i) => {
@@ -70,10 +66,11 @@ class Dashboard extends Component {
                 <div className="row">                  
                     { this.props.match.isExact ? <div className="row dashboard"> {cards} </div> : null }    
                 </div>          
-                    <Route path='/dashboard/addproduct' component={AddProduct} /> 
+                <Route path='/dashboard/addproduct' component={AddProduct} />
+                <Route path='/dashboard/editPrduct/:id' component={EditProduct} />
             </Aux>
         )
     }
 }
 
-export default withRouter(Dashboard);
+export default withErrorHandler(Dashboard, Axios);

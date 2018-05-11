@@ -123,6 +123,10 @@ class Auth extends Component {
             </Aux>
         );
     }
+
+    componentDidMount(){
+        console.log(this.props)
+    }
 }
 
 export default Auth;

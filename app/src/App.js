@@ -20,7 +20,7 @@ state = {
           <Aux session={this.state.session}>
               <Route path='/' exact component={Auth} />
               <Route path='/dashboard' component={Dashboard} />             
-              <Route path='/register' component={Signup} />
+              <Route path='/register' component={Signup} />              
           </Aux>
         </div>
       </BrowserRouter>
