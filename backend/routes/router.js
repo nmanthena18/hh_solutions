@@ -58,6 +58,19 @@ Router.get('/logout', function(req,res){
   res.status(200).send({message: "Logout Successfully"});
 });
 
+Router.post('/editProduct', function(req, res){
+  Tasks.editProduct(req, res, (err, rows)=>{
+    if(err)return res.status(400).send({message: "Something went wrong"});
+    res.status(200).send(rows);
+  })
+});
+
+Router.post('/updateProduct', function(req, res){
+  Tasks.updateProduct(req, res, (err, rows)=>{
+    if(err)return res.status(400).send({message: "Something went wrong"});
+    res.status(200).send(rows);
+  })
+});
 
 isLoggeIn = (req, res) => {
  if(!req.session.user) {res.status(401).send({message: "Not authorized"}) }

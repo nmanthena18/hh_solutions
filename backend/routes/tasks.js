@@ -59,6 +59,34 @@ var Tasks={
 		});
 	},
 
+	editProduct:(req, res, callback) =>{
+		console.log(req.body)
+		let id = req.body.id;		
+		let query = "SELECT * from `hh_solutions`.`products` WHERE `prd_id`='"+id+"';";
+		cPool(res, (connect) =>{
+			connect.query(query,(err, rows)=> {
+				console.log(err)
+				connect.release();
+				if(err) return callback(err,'');
+				return callback(err,rows);
+			});
+		});
+	},
+	updateProduct:(req, res, callback) =>{
+		console.log(req.body)
+		let id = req.body.currentPrdId;		
+		let data = req.body.form
+		let query = "update `hh_solutions`.`products` set prd_name='"+data.prd_name+"', prd_shortname='"+data.prd_shortname+"', prd_price='"+data.prd_price+"', prd_qty='"+data.prd_qty+"', prd_scode='"+data.prd_scode+"', prd_gst='"+data.prd_gst+"', prd_desc='"+data.prd_desc+"'  WHERE `prd_id`="+id;
+		cPool(res, (connect) =>{
+			connect.query(query,(err, rows)=> {
+				console.log(err)
+				connect.release();
+				if(err) return callback(err,'');
+				return callback(err,rows);
+			});
+		});
+	},
+
 	loadAllPrds:(req, res, callback) =>{
 		cPool(res, (connect) =>{
 			connect.query('SELECT * from products ',(err, rows)=> {

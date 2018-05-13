@@ -18,13 +18,13 @@ class AddProduct extends Component {
         prd_added:false,
         isFormValid:false,
         form:{
-            prd_name:null,
-            prd_scode:null,
-            prd_shortname:null,
-            prd_price:null,
-            prd_qty:null,
-            prd_gst:null,
-            prd_desc:''
+            prd_name:'',
+            prd_scode:'',
+            prd_shortname:'',
+            prd_price:'',
+            prd_qty:'',
+            prd_gst:'',
+            prd_desc:' '
         },
         formValidation : {
             prd_name:{
@@ -96,6 +96,7 @@ class AddProduct extends Component {
                     change={(e) => {this.changeHandler(e)}}
                     isInvalid={this.state.formValidation.prd_name.valid} 
                     touched={this.state.formValidation.prd_name.touched}
+                    value={this.state.form.prd_name}
                     classes="form-control" inpType="text" />
                 <Input name="prd_scode" 
                     placeholder="Enter Product Code"
@@ -103,29 +104,34 @@ class AddProduct extends Component {
                     isInvalid={this.state.formValidation.prd_scode.valid} 
                     touched={this.state.formValidation.prd_scode.touched}
                     change={(e) => {this.changeHandler(e)}}
+                    value={this.state.form.prd_scode}
                     classes="form-control" inpType="text"></Input> <br/>
                 <Input name="prd_shortname" 
                     placeholder="Enter Product Short Name"
                     isInvalid={this.state.formValidation.prd_shortname.valid} 
                     touched={this.state.formValidation.prd_shortname.touched}
                     change={(e) => {this.changeHandler(e)}}
+                    value={this.state.form.prd_shortname}
                     classes="form-control" inpType="text" />
                 <Input name="prd_price" 
                     inputGroupSymbol="INR" placeholder="Enter Product Price"
                     isInvalid={this.state.formValidation.prd_price.valid} 
                     touched={this.state.formValidation.prd_price.touched}
+                    value={this.state.form.prd_price}
                     change={(e) => {this.changeHandler(e)}} 
                     classes="form-control" inpType="text" /> <br/>
                 <Input name="prd_qty" 
                     placeholder="Enter Product Quantity" value="1" 
                     change={(e) => {this.changeHandler(e)}}
                     isInvalid={this.state.formValidation.prd_qty.valid} 
+                    value={this.state.form.prd_qty}
                     touched={this.state.formValidation.prd_qty.touched}
                     inputGroupSymbol="Number Only"
                     classes="form-control" inpType="text" /> <br/>
                 <Input name="prd_gst" 
                     inputGroupSymbol="%"
                     placeholder="Enter Product GST" value="18"
+                    value={this.state.form.prd_gst}
                     change={(e) => {this.changeHandler(e)}}
                     isInvalid={this.state.formValidation.prd_gst.valid} 
                     touched={this.state.formValidation.prd_gst.touched}
@@ -134,11 +140,12 @@ class AddProduct extends Component {
                     placeholder="Enter Description"
                     change={(e) => {this.changeHandler(e)}}
                     isInvalid={this.state.formValidation.prd_desc.valid} 
+                    value={this.state.form.prd_desc}
                     touched={this.state.formValidation.prd_desc.touched}
                     value={this.state.form.prd_desc}
                     classes="form-control" inpType="textarea">
                     </Input>                
-                <Button classes="btn btn-primary" disabled={!this.state.isFormValid} clicked={() => {this.saveProduct()}}>Save Product </Button> &nbsp;
+                <Button classes="btn btn-primary" disabled={!this.state.isFormValid} clicked={() => {this.state.page == 'addProduct'? this.saveProduct() : this.updateProduct()}}> {this.state.page == 'addProduct' ? 'Save Product' : 'Update Product'} </Button> &nbsp;
                 <Button classes="btn btn-danger" clicked={this.closeModal}>Cancel</Button>
             </Aux>
         );
@@ -170,18 +177,22 @@ class AddProduct extends Component {
                     {addproduct}
                 </Modal>
                 <DataGrid gridData={this.state.gridData} columns={this.state.columns} edit={this.editProduct}/>
-                {this.state.edit ? <Redirect  to={{
-            pathname: '/dashboard/editPrduct/'+this.state.edit,
+                {this.state.page == 'updateProduct' ? <Redirect  to={{
+            pathname: [this.props.match.path+'/editProduct/'+this.state.page],
           }}/> : null}
+                {this.state.page == 'addProduct' ? <Redirect  to={{
+            pathname: [this.props.match.path+'/' +this.state.page]}}/> : null}
             </Aux>
         )
     }
 
     //Add/Edit item 
     AddItem = (e, n) =>{
+        console.log(this.props.match.path)
         this.setState({
+            page:"addProduct",
             showModel:true
-        })
+        });
     }
 
     closeModal = () =>{
@@ -189,9 +200,21 @@ class AddProduct extends Component {
     }
 
     editProduct = (id) =>{
-        this.setState({
-            edit:id
-        })
+        Axios.post('/api/editProduct', {id}).then(res => {
+            this.setState({
+                form:res.data[0],
+                showModel:true,
+                page:'updateProduct',
+                currentPrdId:id
+            });
+        });
+    }
+
+    updateProduct = () =>{
+        let id = this.state.currentPrdId
+        Axios.post('/api/updateProduct', this.state).then(res => {
+            console.log(res)
+        });
     }
 
     saveProduct(){
@@ -260,8 +283,9 @@ class AddProduct extends Component {
         return isValid;
     }   
     componentDidMount(){
+        console.log(this.state)
         this.loadAllProduct();
     } 
 }
 
-export default withErrorHandler(AddProduct, Axios);
+export default withErrorHandler(withRouter(AddProduct), Axios);

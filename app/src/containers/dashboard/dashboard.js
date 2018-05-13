@@ -32,6 +32,11 @@ class Dashboard extends Component {
                 name:"Get Bill History",
                 icon:"fa-history",
                 ids:4              
+            },
+            DailyBillHistory:{
+                name:"Today Bill History",
+                icon:"fa-history",
+                ids:5              
             }
         },
         showModel:null
@@ -52,7 +57,7 @@ class Dashboard extends Component {
             for(let item in items){
                 eachCard.push( <div className="col" key={item}>
                 <Card title={items[item].name}>                    
-                    <Link className="btn btn-primary" to="/dashboard/addproduct">{items[item].name}</Link>
+                    <Link className="btn btn-primary" to="/dashboard/products">{items[item].name}</Link>
                     <i className={"fas fa-5x float-right " + items[item].icon}></i>
                 </Card>
                 </div>
@@ -66,11 +71,11 @@ class Dashboard extends Component {
                 <div className="row">                  
                     { this.props.match.isExact ? <div className="row dashboard"> {cards} </div> : null }    
                 </div>          
-                <Route path='/dashboard/addproduct' component={AddProduct} />
-                <Route path='/dashboard/editPrduct/:id' component={EditProduct} />
+                <Route path='/dashboard/products' component={AddProduct} />
             </Aux>
         )
     }
+    
 }
 
 export default withErrorHandler(Dashboard, Axios);

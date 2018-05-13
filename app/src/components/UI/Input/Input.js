@@ -14,8 +14,8 @@ const Input = (props) =>{
             disabled={props.disabled}
             className={ElementClasses.join(' ')} 
             placeholder={props.placeholder}
-            value={props.children}
-            name={props.name}></textarea>
+            value={props.value}
+            name={props.name}>{props.value}</textarea>
             break;
         case 'select' :
             Element = <select
@@ -27,13 +27,15 @@ const Input = (props) =>{
             {props.children} </select>
             break;
         default : 
-            Element =<Aux><input 
+            Element =<Aux>
+                <input 
                     autoComplete="nope"
                     onChange={props.change}
                     disabled={props.disabled}
                     type={props.inpType || 'text'}
                     className={ElementClasses.join(' ')} 
                     placeholder={props.placeholder}
+                    value={props.value}
                     name={props.name}/>
                     {props.children} 
                     </Aux>         
