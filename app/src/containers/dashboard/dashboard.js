@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Route, Link, withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 import Aux from '../../hoc/Auxulary';
@@ -16,22 +17,25 @@ class Dashboard extends Component {
             billing:{
                 name:"Billing",
                 icon:"fa-hand-holding-usd",
-                ids:1
+                ids:1,
+                pathname:'billing'
             },
             addproduct:{
                 name:"Add Product",
                 icon:"fa-edit" ,
-                ids:2           
+                ids:2,
+                pathname:'products'      
             },
             availQty:{
                 name:"Get All Products Details",
-                icon:"fa-stack-overflow" ,
+                icon:"fa-shopping-cart" ,
                 ids:3             
             },
             billHistory:{
                 name:"Get Bill History",
                 icon:"fa-history",
-                ids:4              
+                ids:4,
+                pathname:'billinghistory'            
             },
             DailyBillHistory:{
                 name:"Today Bill History",
@@ -41,24 +45,18 @@ class Dashboard extends Component {
         },
         showModel:null
     }
-    Logout = () =>{
-        Axios.get('/api/logout').then(res =>{
-            console.log(res)
-        }).catch(err =>{
-            console.log(err)
-        })
-        this.setState({session:false});
-    }
+    
 
     render(){
+        console.log(this.state)
         let dashboardAction = [{...this.state.dashboardItems}]
         let cards = dashboardAction.map( (items, i) => {
             let eachCard =[]
             for(let item in items){
                 eachCard.push( <div className="col" key={item}>
                 <Card title={items[item].name}>                    
-                    <Link className="btn btn-primary" to="/dashboard/products">{items[item].name}</Link>
-                    <i className={"fas fa-5x float-right " + items[item].icon}></i>
+                    <p className="text-center clearfix"><i className={"fas fa-5x float-right " + items[item].icon}></i></p>
+                    <Link className="btn btn-primary" to={"/dashboard/"+items[item].pathname}>{items[item].name}</Link>
                 </Card>
                 </div>
                )
@@ -67,15 +65,20 @@ class Dashboard extends Component {
         });
         return(
             <Aux>
-                <Header logoutHandler={this.Logout} />
-                <div className="row">                  
-                    { this.props.match.isExact ? <div className="row dashboard"> {cards} </div> : null }    
-                </div>          
+                <Header logoutHandler={this.Logout} />              
+                    { this.props.match.isExact ? <div className="row dashboard"> {cards} </div> : null }           
                 <Route path='/dashboard/products' component={AddProduct} />
             </Aux>
         )
     }
-    
+
+
 }
 
-export default withErrorHandler(Dashboard, Axios);
+const mapStateToProps = (state) =>{
+    return {
+        auth:state.auth
+    }
+}
+
+export default connect(mapStateToProps) (withErrorHandler(Dashboard, Axios));

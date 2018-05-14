@@ -76,7 +76,8 @@ var Tasks={
 		console.log(req.body)
 		let id = req.body.currentPrdId;		
 		let data = req.body.form
-		let query = "update `hh_solutions`.`products` set prd_name='"+data.prd_name+"', prd_shortname='"+data.prd_shortname+"', prd_price='"+data.prd_price+"', prd_qty='"+data.prd_qty+"', prd_scode='"+data.prd_scode+"', prd_gst='"+data.prd_gst+"', prd_desc='"+data.prd_desc+"'  WHERE `prd_id`="+id;
+		let timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
+		let query = "update `hh_solutions`.`products` set prd_name='"+data.prd_name+"', prd_shortname='"+data.prd_shortname+"', prd_price='"+data.prd_price+"', prd_qty='"+data.prd_qty+"', prd_scode='"+data.prd_scode+"', prd_gst='"+data.prd_gst+"', prd_desc='"+data.prd_desc+"', prd_updated_date='"+timestamp+"'  WHERE `prd_id`="+id;
 		cPool(res, (connect) =>{
 			connect.query(query,(err, rows)=> {
 				console.log(err)

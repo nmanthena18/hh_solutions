@@ -1,31 +1,41 @@
 import React, { Component } from 'react';
-import {BrowserRouter, Route} from 'react-router-dom';
+import {BrowserRouter, Route, Redirect, withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 import './App.css';
 
 import Aux from './hoc/Auxulary';
 import Signup from './containers/Signup/Signup';
 import Auth from './containers/auth/auth';
 import Dashboard from './containers/dashboard/dashboard';
+import Billing from './containers/Billing/Billing';
 
 class App extends Component {
-
-state = {
-  session:false
-}
-
   render() {
     return (
       <BrowserRouter>
         <div className="container">
-          <Aux session={this.state.session}>
+          <Aux>
+              {/* { this.isLoggedIn()  }                    */}
+              <Route path='/dashboard' component={ Dashboard } />
               <Route path='/' exact component={Auth} />
-              <Route path='/dashboard' component={Dashboard} />             
               <Route path='/register' component={Signup} />              
+              <Route path='/dashboard/billing' component={Billing} />              
           </Aux>
         </div>
       </BrowserRouter>
     );
   }
+
+  isLoggedIn = () => {
+      return !this.props.auth ? <Redirect to="/" /> : <Route path='/dashboard' component={ Dashboard } /> 
+  }
+
 }
 
-export default App;
+const mapStateToProps = (state) =>{
+  return {
+      auth:state.auth
+  }
+}
+
+export default connect(mapStateToProps) (App);

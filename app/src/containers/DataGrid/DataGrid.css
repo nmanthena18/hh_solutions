@@ -5,6 +5,10 @@
     border: solid 1px #ccc;
     box-sizing: border-box;
 }
+.react-grid .row.header{
+    background-color:steelblue;
+    color:white;
+}
 .react-grid .row.header, .react-grid .row.body{
     font-weight: bold;
     border-bottom: solid 1px #ccc;

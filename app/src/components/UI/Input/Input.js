@@ -27,8 +27,7 @@ const Input = (props) =>{
             {props.children} </select>
             break;
         default : 
-            Element =<Aux>
-                <input 
+            Element = <input 
                     autoComplete="nope"
                     onChange={props.change}
                     disabled={props.disabled}
@@ -37,8 +36,7 @@ const Input = (props) =>{
                     placeholder={props.placeholder}
                     value={props.value}
                     name={props.name}/>
-                    {props.children} 
-                    </Aux>         
+                    {props.children}      
     }
     return (
         <div className={props.inputGroupSymbol ? "input-group" :"form-group" }>

@@ -1,16 +1,18 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 import Aux from '../../hoc/Auxulary';
 import Button from '../../components/UI/Buttons/Buttons';
 import Input from '../../components/UI/Input/Input';
 import Axios from '../../Axios';
 import {Link, Redirect} from 'react-router-dom';
+import * as actionTypes from '../../Store/actions';
 
 class Auth extends Component {
     state ={
         form:{
-            user_id:null,
-            password:null
+            user_id:"",
+            password:""
         },  
         formValidation:{
             user_id:{
@@ -35,11 +37,13 @@ class Auth extends Component {
     }
     Login = () =>{
         Axios.post('/api/login', this.state.form).then(res =>{
-            console.log(res.data.email)
             if(res.data.email){
+                this.props.login(res.data.email);
                 this.setState({
                     email:res.data.email
-                })
+                });
+
+                console.log(this.props)
             }
         }).catch(err =>{
             console.log(err)
@@ -105,9 +109,11 @@ class Auth extends Component {
                             <form autoComplete="no-value">
                                 <Input classes="form-control" isInvalid={this.state.formValidation.user_id.valid} 
                                 touched={this.state.formValidation.user_id.touched}
+                                value={this.state.user_id}
                                 change={(e) => {this.changeHandler(e)}} placeholder="Enter your Id" name="user_id" value={this.state.form.user_id} />
                                 <Input classes="form-control" isInvalid={this.state.formValidation.password.valid}
                                 touched={this.state.formValidation.password.touched}
+                                value={this.state.password}
                                 change={(e) => {this.changeHandler(e)}} inpType="password" placeholder="Enter your password" name="password" value={this.state.form.password}/>
                                 <Button classes="btn btn-primary" clicked={this.Login}
                                     disabled={!this.state.formIsValid}
@@ -124,9 +130,19 @@ class Auth extends Component {
         );
     }
 
-    componentDidMount(){
-        console.log(this.props)
-    }
 }
 
-export default Auth;
+const mapStateToProps = (state) => {
+    return {
+        auth:state.auth
+    };
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        login: (auth) => dispatch({type: actionTypes.LOGIN_AUTHENDICATION, auth:auth}),
+        logout: (auth) => dispatch({type: actionTypes.LOGOUT_AUTHENDICATION, auth:auth})
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);

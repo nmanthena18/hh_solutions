@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Route, Redirect, withRouter } from 'react-router-dom';
+import {Route, Redirect, withRouter, Switch, Link } from 'react-router-dom';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import Auth from '../auth/auth';
 
@@ -11,6 +11,7 @@ import Card from '../../components/UI/card/card';
 import Alert from '../../components/UI/Alert/Alert';
 import Axios from '../../Axios';
 import DataGrid from '../DataGrid/DataGrid';
+import * as Data from '../../components/commonData/commonData';
 
 class AddProduct extends Component {   
     state ={
@@ -84,11 +85,11 @@ class AddProduct extends Component {
                 touched:false
             }
         },
-        columns: [{key:"prd_name", name:"Name"},{key:"prd_price", name:"Price"}, {key:"prd_qty",name:"Quantity"}, {key:"prd_created_date", name:"Created Date"}, {key:"prd_scode",name:"Code"}, {key:"prd_desc",name:"Description"}, {key:"prd_gst", name:"GST %"}, {key:"prd_id",name:"Edit", action:true}]
+        columns: Data.HeaderData
     }
 
 
-    render(){   
+    render(){
         const addproduct = (
             <Aux>
                 <Input name="prd_name" 
@@ -158,7 +159,7 @@ class AddProduct extends Component {
                             <h5 className="card-title">To Add Products Click on the below button</h5>
                             <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
                             <Button classes="btn btn-success" clicked={this.AddItem}>
-                                <i className="fas fa-cart-plus"></i> Add Product 
+                                <i className="fas fa-cart-plus"></i><Link to={this.props.match.path+'/addProduct'}> Add Product </Link> 
                             </Button>
                         </Card>
                         <Alert classes="alert-success" show={this.state.prd_added}>Product Added Successfully</Alert>
@@ -173,24 +174,25 @@ class AddProduct extends Component {
                     </div>
                     <div className="col-md-2"></div>
                 </div>
-                <Modal title="Add Product" show={this.state.showModel} closeModal={this.closeModal}>
+                <Modal title={this.state.pageTitle} show={this.state.showModel} closeModal={this.closeModal}>
                     {addproduct}
                 </Modal>
+                <Alert classes="alert-success" show={this.state.alertMesssage} alertAutoClose={ this.state.alertMesssage ? this.alertAutoClose(2000) : null}>
+                    {this.state.alertMesssage}
+                </Alert>
                 <DataGrid gridData={this.state.gridData} columns={this.state.columns} edit={this.editProduct}/>
-                {this.state.page == 'updateProduct' ? <Redirect  to={{
-            pathname: [this.props.match.path+'/editProduct/'+this.state.page],
-          }}/> : null}
-                {this.state.page == 'addProduct' ? <Redirect  to={{
-            pathname: [this.props.match.path+'/' +this.state.page]}}/> : null}
+                <br/>
+                <br/>
+
             </Aux>
         )
     }
 
     //Add/Edit item 
     AddItem = (e, n) =>{
-        console.log(this.props.match.path)
         this.setState({
             page:"addProduct",
+            pageTitle:"Add Product",
             showModel:true
         });
     }
@@ -201,19 +203,34 @@ class AddProduct extends Component {
 
     editProduct = (id) =>{
         Axios.post('/api/editProduct', {id}).then(res => {
+            let formValidation = {...this.state.formValidation}
+            let validation = "validation"
+            for(let key in res.data[0]){
+                //formValidation.key.valid = true;
+                let obj = {...formValidation[key]};
+                obj.valid = true;
+                formValidation[key] = obj;
+            }
             this.setState({
                 form:res.data[0],
                 showModel:true,
                 page:'updateProduct',
+                pageTitle:"Update Product",
+                formValidation:formValidation,
                 currentPrdId:id
             });
         });
     }
 
     updateProduct = () =>{
-        let id = this.state.currentPrdId
+        let id = this.state.currentPrdId;
         Axios.post('/api/updateProduct', this.state).then(res => {
-            console.log(res)
+            this.setState({
+                alertMesssage:res.data.message,
+                showModel:false
+            })
+        }).catch(err => {
+            console.log(err);
         });
     }
 
@@ -282,10 +299,18 @@ class AddProduct extends Component {
         }
         return isValid;
     }   
+    alertAutoClose = (time) =>{
+        setTimeout( () => {
+            this.setState({
+                alertMesssage:null
+            })
+        }, time)
+    }
     componentDidMount(){
-        console.log(this.state)
         this.loadAllProduct();
     } 
+
+
 }
 
 export default withErrorHandler(withRouter(AddProduct), Axios);

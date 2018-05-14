@@ -68,7 +68,7 @@ Router.post('/editProduct', function(req, res){
 Router.post('/updateProduct', function(req, res){
   Tasks.updateProduct(req, res, (err, rows)=>{
     if(err)return res.status(400).send({message: "Something went wrong"});
-    res.status(200).send(rows);
+    res.status(200).send({message: "Product Updated Successfully"});
   })
 });
 

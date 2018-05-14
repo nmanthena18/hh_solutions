@@ -21,16 +21,18 @@ export default class DataGrid extends Component {
         }
         if(this.state.data){
             Body = this.state.data.map( (item, i, arr)=>{ 
+                let ii = i+1;
+                item.index = ii;
                 return (
                     <div className="row body" key={"row-"+i}>
-                        {generateColumns(item)}
+                        { generateColumns(item)}
                     </div>
                 )
             });           
                       
         }
         let Header = this.props.columns.map((item, i)=>{
-            return <Columns key={item.key} name={item.name}> <p>{item.name}</p> <Input type="text" classes="form-control" placeholder={"Search by "+ item.name} key={item.key} name={item.key} change={(e) => {this.filterGrid(e, item.key)}}  /> </Columns>
+            return <Columns key={item.key} name={item.name}> <p>{item.name}</p>  {item.filter ? <Input type="text" classes="form-control" placeholder={"Search by "+ item.name} key={item.key} name={item.key} change={(e) => {this.filterGrid(e, item.key)}}  /> : null} </Columns>
         });
         return (
             <Aux>
