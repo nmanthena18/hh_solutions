@@ -27,8 +27,7 @@ const Input = (props) =>{
             {props.children} </select>
             break;
         default : 
-            Element = <input 
-                    autoComplete="nope"
+            Element = <input
                     onChange={props.change}
                     disabled={props.disabled}
                     type={props.inpType || 'text'}

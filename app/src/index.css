@@ -77,3 +77,82 @@ body, *{
 .topNav li a{
   padding:5px;
 }
+.autocomplete{
+  padding:10px;
+  border-radius:50px;
+  border:solid #ddd 2px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top:20px;
+  margin-bottom:20px;
+}
+input:focus{
+  outline: none;
+}
+.autocomplete-component{
+  position: relative;
+}
+.autocomplete-component .fa-search{
+  position: absolute;
+  top:40%;
+  right:3%;
+  z-index: 99;
+}
+.records{
+  position: absolute;
+  top:65px;
+  list-style: none;
+  width:100%;
+  padding-left:15px;
+  padding-right:15px;
+  box-sizing: border-box;
+  z-index: 99;
+}
+.records .item{
+  padding:5px;
+  padding-left:10px;
+  padding-right:10px;
+  background-color: #eee;
+  border-bottom:solid 1px #ccc;
+  border-left:solid 1px #ccc;
+  border-right:solid 1px #ccc;
+  cursor: pointer;
+  pointer-events: all;
+}
+.records .item label{
+  margin:0;
+  pointer-events: none;
+}
+.item:nth-child(even){
+  background-color:#ddd;
+}
+.records .item label{
+  width:70%;
+}
+.records .item span{
+  width: 14%;
+  display: inline-block;
+  padding: 5px;
+  box-sizing: border-box;
+  background: #007bff;
+  border-radius: 18px;
+  text-align: center;
+  font-size: 10px;
+  color:white;
+  margin-left:2px;
+}
+.records .item span.qty{
+  background: #28a745;
+}
+
+.records .item span.red{
+  background-color:#dc3545;
+}
+
+.qty-input{
+  width:50px;
+  border-radius: 10px;
+}
+.billSummaryTable td{
+  vertical-align: middle;
+}

@@ -180,7 +180,7 @@ class AddProduct extends Component {
                 <Alert classes="alert-success" show={this.state.alertMesssage} alertAutoClose={ this.state.alertMesssage ? this.alertAutoClose(2000) : null}>
                     {this.state.alertMesssage}
                 </Alert>
-                <DataGrid gridData={this.state.gridData} columns={this.state.columns} edit={this.editProduct}/>
+                <DataGrid gridData={this.state.gridData} columns={this.state.columns} edit={this.editProduct} />
                 <br/>
                 <br/>
 

@@ -72,6 +72,14 @@ Router.post('/updateProduct', function(req, res){
   })
 });
 
+Router.post('/getProductInfo', function(req, res){
+  Tasks.getProductInfo(req, res, (err, rows)=>{
+    if(err)return res.status(400).send({message: "Something went wrong"});
+    res.json(rows);
+  })
+});
+
+
 isLoggeIn = (req, res) => {
  if(!req.session.user) {res.status(401).send({message: "Not authorized"}) }
  else true

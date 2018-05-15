@@ -48,7 +48,7 @@ var Tasks={
 	},
 
 	saveProduct:(req, res, callback) =>{
-		let query = "INSERT INTO `hh_solutions`.`products` (`prd_name`, `prd_shortname`, `prd_price`, `prd_qty`, `prd_scode`, `prd_gst`, `prd_desc`) VALUES ('"+req.body.prd_name+"', '"+req.body.prd_scode+"', '"+req.body.prd_shortname+"', '"+req.body.prd_price+"', '"+req.body.prd_qty+"', '"+req.body.prd_gst+"', '"+req.body.prd_desc+"');"
+		let query =  "INSERT INTO `hh_solutions`.`products` (`prd_name`, `prd_scode`,`prd_shortname`, `prd_price`, `prd_qty`, `prd_gst`, `prd_desc`) VALUES ('"+req.body.prd_name+"', '"+req.body.prd_scode+"', '"+req.body.prd_shortname+"', '"+req.body.prd_price+"', '"+req.body.prd_qty+"', '"+req.body.prd_gst+"', '"+req.body.prd_desc+"');";
 		cPool(res, (connect) =>{
 			connect.query(query,(err, rows)=> {
 				console.log(err)
@@ -73,7 +73,6 @@ var Tasks={
 		});
 	},
 	updateProduct:(req, res, callback) =>{
-		console.log(req.body)
 		let id = req.body.currentPrdId;		
 		let data = req.body.form
 		let timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -91,6 +90,18 @@ var Tasks={
 	loadAllPrds:(req, res, callback) =>{
 		cPool(res, (connect) =>{
 			connect.query('SELECT * from products ',(err, rows)=> {
+				connect.release();
+				if(err) return callback(err,'');
+				return callback(err,rows);
+			});
+		});
+	},
+
+	getProductInfo:(req, res, callback) =>{
+		let query = req.body.query;
+		let sqlQuery = "SELECT * FROM products where prd_name like '%"+query+"%' or prd_shortname like '%"+query+"%'";
+		cPool(res, (connect) =>{
+			connect.query(sqlQuery, (err, rows)=> {
 				connect.release();
 				if(err) return callback(err,'');
 				return callback(err,rows);
