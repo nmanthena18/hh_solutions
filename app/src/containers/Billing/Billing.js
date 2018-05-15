@@ -107,7 +107,7 @@ class Billing extends Component {
         if(this.state.data){
             this.setState({
                 cardItems:dataCopy,
-                totals:this.calculateTotal(item)
+                totals:this.calculateTotal()
             });
         }
     }
@@ -125,23 +125,17 @@ class Billing extends Component {
 
     }
 
-    calculateTotal = (item) =>{
+    calculateTotal = () =>{
         let obj = {
             totalAmount:this.state.totals.totalAmount,
             totalGST:this.state.totals.totalGST,
             totalQty:this.state.totals.totalQty
         }
-        console.log(this.state.totals.totalQty, item.purchaseQty)
-        let qty = 0
         for(let i = 0; i < this.state.cardItems.length; i++){
             obj.totalAmount+= this.state.cardItems[i].prd_price;
             obj.totalGST+= this.state.cardItems[i].prd_gst;
-            qty+= item.purchaseQty;
-            obj.totalQty = item.purchaseQty;
+            obj.totalQty+= this.state.cardItems[i].purchaseQty;
         }
-
-        console.log(qty)
-
         return obj;
     }
 }
