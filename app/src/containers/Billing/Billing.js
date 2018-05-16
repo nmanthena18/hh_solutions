@@ -55,6 +55,9 @@ class Billing extends Component {
                 <div className="row">
                     <div className="col-1"></div>
                     <div className="col-10">
+                    <Alert classes="alert-success"  show={this.state.alert}>
+                        Invoice generated successfully
+                    </Alert>
                     <table className="billSummaryTable table table-striped">
                         <thead>
                             <tr>
@@ -279,9 +282,8 @@ class Billing extends Component {
             totals: this.state.totals,
             customer_name: this.state.customer_name,
         }
-
         Axios.post('/api/generateInvoice', data).then( res =>{
-            console.log(res)
+           this.setState({generateShow:false, alert:true})
         }).catch(err=> console.log(err));
     }
     
