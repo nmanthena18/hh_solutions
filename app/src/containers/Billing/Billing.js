@@ -46,8 +46,8 @@ class Billing extends Component {
                 <br/>
                 <br/>
                 <div className="row">
-                    <div className="col-2"></div>
-                    <div className="col-8">
+                    <div className="col-1"></div>
+                    <div className="col-10">
                     <table className="billSummaryTable table">
                         <thead>
                             <tr>
@@ -71,12 +71,12 @@ class Billing extends Component {
                                 <td>Total GST : {this.state.totals.totalGST}</td>
                                 <td>Total Quantity : {this.state.totals.totalQty}</td>
                                 <td>Total Amount : {this.state.totals.totalAmount} </td>
-                                <td> With GST: {this.state.totals.totalAmount + this.state.totals.totalGST}</td>
+                                <td> With GST : {this.state.totals.totalAmount + this.state.totals.totalGST}</td>
                             </tr>
                         </tfoot>
                     </table>
                     </div>
-                    <div className="col-2"></div>
+                    <div className="col-1"></div>
                 </div>
             </Aux>
         )
@@ -104,10 +104,11 @@ class Billing extends Component {
         if(!isExist){
             dataCopy.push(item);
         }
+        let sum = this.calculateTotal();
         if(this.state.data){
             this.setState({
                 cardItems:dataCopy,
-                totals:this.calculateTotal()
+                totals:sum
             });
         }
     }
@@ -127,13 +128,13 @@ class Billing extends Component {
 
     calculateTotal = () =>{
         let obj = {
-            totalAmount:this.state.totals.totalAmount,
-            totalGST:this.state.totals.totalGST,
-            totalQty:this.state.totals.totalQty
+            totalAmount:0,
+            totalGST:0,
+            totalQty:0
         }
         for(let i = 0; i < this.state.cardItems.length; i++){
-            obj.totalAmount+= this.state.cardItems[i].prd_price;
-            obj.totalGST+= this.state.cardItems[i].prd_gst;
+            obj.totalAmount+= this.state.cardItems[i].prd_price * this.state.cardItems[i].purchaseQty;
+            obj.totalGST+= this.state.cardItems[i].prd_gst * this.state.cardItems[i].purchaseQty;
             obj.totalQty+= this.state.cardItems[i].purchaseQty;
         }
         return obj;

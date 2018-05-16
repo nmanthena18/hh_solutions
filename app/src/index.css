@@ -156,3 +156,6 @@ input:focus{
 .billSummaryTable td{
   vertical-align: middle;
 }
+.billSummaryTable tfoot td {
+  font-weight: bold;
+}
