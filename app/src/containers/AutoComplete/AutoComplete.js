@@ -25,11 +25,13 @@ class AutoComplete extends Component {
         }
         return(
             <div className="autocomplete-component">
-                <Input classes="autocomplete" placeholder="Type product name" name="autocomplete" change={this.changeHandler}/>
+                <Input classes="autocomplete" placeholder="Type product name"
+                value={this.props.queryString}
+                name="autocomplete" change={this.changeHandler}/>
                 <i className="fas fa-search"></i>
-                <ul className="records">
+                {this.props.recordsShow ? <ul className="records" >
                     {filterData}
-                </ul>
+                </ul> : null }
             </div>
         )
     }
@@ -37,9 +39,6 @@ class AutoComplete extends Component {
     changeHandler = (e) =>{
         this.props.query(e.target.value); 
         this.setState({query:e.target.value});
-    }
-    addToCartHandler = (id) =>{
-        console.log(id)
     }
 }
 

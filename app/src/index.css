@@ -28,6 +28,10 @@ body, *{
 .card{
   border:sandybrown 2px solid;
 }
+h5.card-header{
+  font-size:14px;
+  font-weight: bold;
+}
 .overlay{
   position: fixed;
   height: 100%;
@@ -152,6 +156,9 @@ input:focus{
 .qty-input{
   width:50px;
   border-radius: 10px;
+}
+.billSummaryTable{
+  border:solid 1px #ddd;
 }
 .billSummaryTable td{
   vertical-align: middle;

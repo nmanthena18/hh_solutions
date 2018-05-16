@@ -34,6 +34,7 @@ const Input = (props) =>{
                     className={ElementClasses.join(' ')} 
                     placeholder={props.placeholder}
                     value={props.value}
+                    defaultChecked={props.checked}
                     name={props.name}/>
                     {props.children}      
     }

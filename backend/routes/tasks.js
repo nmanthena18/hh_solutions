@@ -76,7 +76,7 @@ var Tasks={
 		let id = req.body.currentPrdId;		
 		let data = req.body.form
 		let timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
-		let query = "update `hh_solutions`.`products` set prd_name='"+data.prd_name+"', prd_shortname='"+data.prd_shortname+"', prd_price='"+data.prd_price+"', prd_qty='"+data.prd_qty+"', prd_scode='"+data.prd_scode+"', prd_gst='"+data.prd_gst+"', prd_desc='"+data.prd_desc+"', prd_updated_date='"+timestamp+"'  WHERE `prd_id`="+id;
+		let query = "update `products` set prd_name='"+data.prd_name+"', prd_shortname='"+data.prd_shortname+"', prd_price='"+data.prd_price+"', prd_qty='"+data.prd_qty+"', prd_scode='"+data.prd_scode+"', prd_gst='"+data.prd_gst+"', prd_desc='"+data.prd_desc+"', prd_updated_date='"+timestamp+"'  WHERE `prd_id`="+id;
 		cPool(res, (connect) =>{
 			connect.query(query,(err, rows)=> {
 				console.log(err)
@@ -107,7 +107,39 @@ var Tasks={
 				return callback(err,rows);
 			});
 		});
+	},
+
+	generateInvoice:(req, res, callback) =>{
+		let billing_data = req.body;
+		let billing_query = "INSERT into billing_details (customer_name,payment_type,received_amount,total_amount) VALUES ('" + billing_data.customer_name + "', '" + billing_data.paymentMethod + "', '" + billing_data.receivedAmount + "', '" + billing_data.totals.totalAmount + "')";
+
+		cPool(res, (connect) =>{
+			let bill_number = 0;
+			connect.query(billing_query, (err, rows) => {
+				if (err) {
+					return callback(err,'');
+				}
+				bill_number = rows.insertId;
+				if (bill_number) {
+					var product_cart = billing_data.cart;
+					for (key in product_cart) {
+						let bill_product_query = "INSERT into bill_products (prd_id,bill_id,prd_price,prd_gst,prd_qty,total) VALUES (" + product_cart[key].prd_id + ", " + bill_number + ", '" + product_cart[key].prd_price + "', '" + product_cart[key].totalGST + "', '" + product_cart[key].purchaseQty + "', '" + product_cart[key].totalPrice + "');UPDATE products SET `prd_qty`='"+(product_cart[key].prd_qty - product_cart[key].purchaseQty)+"' WHERE `prd_id`="+product_cart[key].prd_id;
+						connect.query(bill_product_query, [1,2], (err, rows) => {
+							console.log(err)
+							if (err) {
+								return callback(err,'');
+							}
+
+							connect.release();
+							return callback(err, rows);
+						});
+					}
+				}
+			});
+		});
 	}
+
+	
 
 };
 

@@ -53,9 +53,9 @@ class Dashboard extends Component {
         let cards = dashboardAction.map( (items, i) => {
             let eachCard =[]
             for(let item in items){
-                eachCard.push( <div className="col" key={item}>
-                <Card title={items[item].name}>                    
-                    <p className="text-center clearfix"><i className={"fas fa-5x float-right " + items[item].icon}></i></p>
+                eachCard.push( <div className="col text-center" key={item}>
+                <Card title={items[item].name} className="">                    
+                    <p className="text-center clearfix"><i className={"fas fa-3x " + items[item].icon}></i></p>
                     <Link className="btn btn-primary" to={"/dashboard/"+items[item].pathname}>{items[item].name}</Link>
                 </Card>
                 </div>
