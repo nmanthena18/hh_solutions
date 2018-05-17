@@ -38,7 +38,7 @@ Router.get('/test', function(req,res){
 Router.post('/saveProduct', (req,res) => {
   Tasks.saveProduct(req, res, (err, rows) =>{
     if(err) return res.status(400).send({message: "Something went wrong"});
-    res.status(200).send({message: "Product Added Successfully"});
+    res.status(200).send({message: "Product Added Successfully", prd_id:rows.insertId});
   })
 });
 
@@ -68,7 +68,7 @@ Router.post('/editProduct', function(req, res){
 Router.post('/updateProduct', function(req, res){
   Tasks.updateProduct(req, res, (err, rows)=>{
     if(err)return res.status(400).send({message: "Something went wrong"});
-    res.status(200).send({message: "Product Updated Successfully"});
+    res.status(200).send({message: "Product Updated Successfully", prd_id:rows.insertId});
   })
 });
 

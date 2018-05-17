@@ -42,8 +42,6 @@ class Auth extends Component {
                 this.setState({
                     email:res.data.email
                 });
-
-                console.log(this.props)
             }
         }).catch(err =>{
             console.log(err)

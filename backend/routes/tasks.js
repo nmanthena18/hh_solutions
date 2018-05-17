@@ -54,13 +54,13 @@ var Tasks={
 				console.log(err)
 				connect.release();
 				if(err) return callback(err,'');
+				console.log(rows)
 				return callback(err,rows);
 			});
 		});
 	},
 
 	editProduct:(req, res, callback) =>{
-		console.log(req.body)
 		let id = req.body.id;		
 		let query = "SELECT * from `hh_solutions`.`products` WHERE `prd_id`='"+id+"';";
 		cPool(res, (connect) =>{
@@ -73,7 +73,7 @@ var Tasks={
 		});
 	},
 	updateProduct:(req, res, callback) =>{
-		let id = req.body.currentPrdId;		
+		let id = req.body.id;		
 		let data = req.body.form
 		let timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
 		let query = "update `products` set prd_name='"+data.prd_name+"', prd_shortname='"+data.prd_shortname+"', prd_price='"+data.prd_price+"', prd_qty='"+data.prd_qty+"', prd_scode='"+data.prd_scode+"', prd_gst='"+data.prd_gst+"', prd_desc='"+data.prd_desc+"', prd_updated_date='"+timestamp+"'  WHERE `prd_id`="+id;
@@ -82,6 +82,7 @@ var Tasks={
 				console.log(err)
 				connect.release();
 				if(err) return callback(err,'');
+				console.log(rows)
 				return callback(err,rows);
 			});
 		});
@@ -125,16 +126,14 @@ var Tasks={
 					for (key in product_cart) {
 						let bill_product_query = "INSERT into bill_products (prd_id,bill_id,prd_price,prd_gst,prd_qty,total) VALUES (" + product_cart[key].prd_id + ", " + bill_number + ", '" + product_cart[key].prd_price + "', '" + product_cart[key].totalGST + "', '" + product_cart[key].purchaseQty + "', '" + product_cart[key].totalPrice + "');UPDATE products SET `prd_qty`='"+(product_cart[key].prd_qty - product_cart[key].purchaseQty)+"' WHERE `prd_id`="+product_cart[key].prd_id;
 						connect.query(bill_product_query, [1,2], (err, rows) => {
-							console.log(err)
 							if (err) {
 								return callback(err,'');
 							}
-
 							connect.release();
-							return callback(err, rows);
 						});
 					}
 				}
+				return callback(err, rows);
 			});
 		});
 	}

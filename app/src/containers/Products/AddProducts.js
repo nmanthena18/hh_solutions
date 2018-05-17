@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import {Route, Redirect, withRouter, Switch, Link } from 'react-router-dom';
+import {connect} from 'react-redux';
+
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import Auth from '../auth/auth';
-
 import Aux from '../../hoc/Auxulary';
 import Modal from '../../components/UI/Modal/Modal';
 import Button from '../../components/UI/Buttons/Buttons';
@@ -12,6 +13,7 @@ import Alert from '../../components/UI/Alert/Alert';
 import Axios from '../../Axios';
 import DataGrid from '../DataGrid/DataGrid';
 import * as Data from '../../components/commonData/commonData';
+import * as actionTypes from '../../Store/actions';
 
 class AddProduct extends Component {   
     state ={
@@ -157,7 +159,7 @@ class AddProduct extends Component {
                     <div className="col text-center mt-5">
                         <Card title="Add Products"> 
                             <h5 className="card-title">To Add Products Click on the below button</h5>
-                            <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <p className="card-text">Once you add the product you can edit the product using edit icon in the products table.</p>
                             <Button classes="btn btn-success" clicked={this.AddItem}>
                                 <i className="fas fa-cart-plus"></i><Link to={this.props.match.path+'/addProduct'}> Add Product </Link> 
                             </Button>
@@ -178,8 +180,8 @@ class AddProduct extends Component {
                     {addproduct}
                 </Modal>
                 <Alert classes="alert-success" show={this.state.alertMesssage} alertAutoClose={ this.state.alertMesssage ? this.alertAutoClose(2000) : null}>
-                    {this.state.alertMesssage}
-                </Alert>
++                    {this.state.alertMesssage}
++                </Alert>
                 <DataGrid gridData={this.state.gridData} columns={this.state.columns} edit={this.editProduct} />
                 <br/>
                 <br/>
@@ -223,11 +225,16 @@ class AddProduct extends Component {
     }
 
     updateProduct = () =>{
-        let id = this.state.currentPrdId;
-        Axios.post('/api/updateProduct', this.state).then(res => {
+        let data = {id: this.state.currentPrdId, form:this.state.form};
+        Axios.post('/api/updateProduct', data).then(res => {
+            let updatdedPrd = this.state.gridData.filter( (v, i) =>{
+                return v.prd_id !== this.state.form.prd_id ;
+            });
+            updatdedPrd.unshift(this.state.form);
             this.setState({
                 alertMesssage:res.data.message,
-                showModel:false
+                showModel:false,
+                gridData:updatdedPrd
             })
         }).catch(err => {
             console.log(err);
@@ -236,15 +243,20 @@ class AddProduct extends Component {
 
     saveProduct(){
         Axios.post('/api/saveProduct', this.state.form).then(res => {
+            let newAddedPrd = this.state.form;
             if(res.data.message){
-                this.setState({prd_added:true})
+                newAddedPrd.index = res.data.prd_id;
+                newAddedPrd.prd_id = res.data.prd_id;
+                let updatedState = Object.assign(this.state.gridData);
+                updatedState.unshift(newAddedPrd);
+                this.setState({prd_added:true,gridData:updatedState})
             }
             if(this.state.prd_added){
-            setTimeout(() => {
-                this.setState({
-                    prd_added:false
-                })
-            }, 2000)
+                setTimeout(() => {
+                    this.setState({
+                        prd_added:false,
+                    })
+                }, 2000)
         }
         }).catch(err => {
             console.log(err);
@@ -259,6 +271,7 @@ class AddProduct extends Component {
                 return  item["prd_created_date"] = new Date(item["prd_created_date"]).toLocaleDateString();
             });
             if(!this.state.gridData){
+                this.props.getAllProductsInfo(res.data);
                 this.setState({
                     gridData : res.data,                    
                 });
@@ -313,4 +326,19 @@ class AddProduct extends Component {
 
 }
 
-export default withErrorHandler(withRouter(AddProduct), Axios);
+const mapStateToProps = (state) => {
+    return {
+        auth:state.auth,
+        productsData:state.productsData
+    };
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getAllProductsInfo: (prds) => dispatch({type: actionTypes.ALLPRODUCTS_INFO, productsData:prds})
+    };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(withRouter(AddProduct), Axios));
+

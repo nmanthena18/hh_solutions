@@ -11,7 +11,7 @@ export default class DataGrid extends Component {
     }   
     
     render() {
-        let Body;        
+        let Body;  
         const generateColumns = (row) => {
             let columns = this.props.columns.map((item, i, arr)=>{
                 let id = row[item.key];
@@ -19,14 +19,14 @@ export default class DataGrid extends Component {
             });
             return columns;
         }
-        if(this.state.data){
-            Body = this.state.data.map( (item, i, arr)=>{ 
+        if(this.props.gridData){
+            Body = this.props.gridData.map( (item, i, arr)=>{ 
                 let ii = i+1;
                 item.index = ii;
                 return (
                     <div className="row body" key={"row-"+i}>
                         { generateColumns(item)}
-                    </div>
+                    </div>     
                 )
             });           
                       
@@ -38,7 +38,7 @@ export default class DataGrid extends Component {
             <Aux>
                 <div className="react-grid">
                     <div className="row header">{Header}</div>
-                    {this.state.data ?  Body : <p className="text-center">No Data Available </p>}
+                    {this.props.gridData ?  Body : <p className="text-center">No Data Available </p>}
                     {this.props.children}
                 </div>
             </Aux>
@@ -68,11 +68,4 @@ export default class DataGrid extends Component {
     edit(id){
         alert(id)
     }
-
-    componentWillUpdate(){
-        this.updateState()
-    }
-    
-
-
 }

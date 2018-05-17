@@ -14,12 +14,12 @@ const Header = (props) =>{
             console.log(err)
         });
     }
-
     return(
         <div>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <span className="navbar-brand mr-auto p-2 bd-highlight" href="#"> Welcome to Hanuman Hardwares</span>
                 <div className="bd-highlight">
+                    <span>{props.auth}</span>
                     <ul className="topNav">
                         <li className="item">
                             <NavLink to='/dashboard'>Dashboard</NavLink>

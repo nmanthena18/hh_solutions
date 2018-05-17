@@ -15,8 +15,8 @@ class App extends Component {
       <BrowserRouter>
         <div className="container">
           <Aux>
-              {/* { this.isLoggedIn()  }                    */}
-              <Route path='/dashboard' component={ Dashboard } />
+              { this.isLoggedIn()  }                   
+              {/* <Route path='/dashboard' component={ Dashboard } /> */}
               <Route path='/' exact component={Auth} />
               <Route path='/register' component={Signup} />              
               <Route path='/dashboard/billing' component={Billing} />              

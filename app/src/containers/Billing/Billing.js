@@ -11,7 +11,7 @@ import Alert from '../../components/UI/Alert/Alert';
 class Billing extends Component {
         state = {
             data:"",
-            cardItems:[],
+            cartItems:[],
             totals:{
                 totalAmount:0,
                 totalGST:0,
@@ -25,8 +25,8 @@ class Billing extends Component {
         }
     render(){
         let BillSummary
-            if(this.state.cardItems){
-                BillSummary = this.state.cardItems.map( (item, i, arr) =>{
+            if(this.state.cartItems){
+                BillSummary = this.state.cartItems.map( (item, i, arr) =>{
                     let ii = i+1
                     return <tr key={ii}>
                             <td>{ii}</td>
@@ -56,7 +56,7 @@ class Billing extends Component {
                     <div className="col-1"></div>
                     <div className="col-10">
                     <Alert classes="alert-success"  show={this.state.alert}>
-                        Invoice generated successfully
+                        Invoice generated successfully Please Note Bill Number <b>#{this.state.BillNumber}</b>
                     </Alert>
                     <table className="billSummaryTable table table-striped">
                         <thead>
@@ -85,7 +85,7 @@ class Billing extends Component {
                             </tr>
                             <tr>
                                 <td colSpan="7" align="right">
-                                    <Button disabled={this.state.cardItems.length <= 0} 
+                                    <Button disabled={this.state.cartItems.length <= 0} 
                                     clicked={this.generateBill}
                                     classes="btn btn-warning">Generate Bill</Button>
                                 </td>
@@ -115,7 +115,7 @@ class Billing extends Component {
                         </tbody>
                     </table>
                     <p>* Please choose below option to genarate final invoice</p>
-                    <Alert show={this.state.paymentMethod} classes="alert-primary">
+                    <div show={this.state.paymentMethod} className="alert alert-primary">
                         <div className="row">
                             <div className="col"><br/>
                                 <Input name="customer_name"
@@ -152,18 +152,18 @@ class Billing extends Component {
                                 <div className="col"></div>
                                 <div className="col"></div>
                                 <div className="col text-right">
-                                    <Button disabled={this.state.cardItems.length <= 0} 
+                                    <Button disabled={this.state.cartItems.length <= 0} 
                                         clicked={this.cancelInvoiceHandler}
                                         classes="btn btn-danger form-control">CANCEL</Button>
                                 </div>
                                 <div className="col text-right">                                    
-                                    <Button disabled={this.state.cardItems.length <= 0} 
+                                    <Button disabled={this.state.cartItems.length <= 0} 
                                         disabled={!this.state.receivedAmount}
                                         clicked={this.generateInvoiceHandler}
                                         classes="btn btn-success">GENERATE INVOICE</Button>
                                 </div>
                             </div>
-                    </Alert>
+                    </div>
                 </Modal>
             </Aux>
         )
@@ -189,9 +189,9 @@ class Billing extends Component {
             alert("You have only "+item.prd_qty+ " available item you can't add more than available..!");
             return;
         }
-        let dataCopy = Object.assign(this.state.cardItems);
+        let dataCopy = Object.assign(this.state.cartItems);
    
-        let isExist = this.state.cardItems.some(function (el) {
+        let isExist = this.state.cartItems.some(function (el) {
                 return el.prd_id === item.prd_id;
         });
         if(!isExist){
@@ -200,13 +200,13 @@ class Billing extends Component {
             item.totalGST = item.prd_gst * e;  
             dataCopy.push(item);
         }else{
-            let indexPos = this.existElement(this.state.cardItems, item);
-            dataCopy[indexPos].purchaseQty = e > 1 ? e : this.state.cardItems[indexPos].purchaseQty + e;
+            let indexPos = this.existElement(this.state.cartItems, item);
+            dataCopy[indexPos].purchaseQty = e > 1 ? e : this.state.cartItems[indexPos].purchaseQty + e;
         }
         let sum = this.calculateTotal();
         if(this.state.data){
             this.setState({
-                cardItems:dataCopy,
+                cartItems:dataCopy,
                 totals:sum,
                 showRecords:false,
                 queryString:'',
@@ -215,13 +215,13 @@ class Billing extends Component {
     }
 
     removeItemHandler = (item) => {
-        let dataCopy = Object.assign(this.state.cardItems);
+        let dataCopy = Object.assign(this.state.cartItems);
         let index = dataCopy.indexOf(item);
         if(index > -1){
             dataCopy.splice(index, 1);
         }
         this.setState({
-            cardItems:dataCopy,
+            cartItems:dataCopy,
             totals:this.calculateTotal()
         });
 
@@ -233,10 +233,10 @@ class Billing extends Component {
             totalGST:0,
             totalQty:0
         }
-        for(let i = 0; i < this.state.cardItems.length; i++){
-            obj.totalAmount+= this.state.cardItems[i].prd_price * this.state.cardItems[i].purchaseQty;
-            obj.totalGST+= this.state.cardItems[i].prd_gst * this.state.cardItems[i].purchaseQty;
-            obj.totalQty+= parseInt(this.state.cardItems[i].purchaseQty);
+        for(let i = 0; i < this.state.cartItems.length; i++){
+            obj.totalAmount+= this.state.cartItems[i].prd_price * this.state.cartItems[i].purchaseQty;
+            obj.totalGST+= this.state.cartItems[i].prd_gst * this.state.cartItems[i].purchaseQty;
+            obj.totalQty+= parseInt(this.state.cartItems[i].purchaseQty);
         }
         return obj;
     }
@@ -276,14 +276,18 @@ class Billing extends Component {
 
     generateInvoiceHandler = ()=>{
         let data = {
-            cart: this.state.cardItems,
+            cart: this.state.cartItems,
             paymentMethod: this.state.paymentMethod,
             receivedAmount: this.state.receivedAmount,
             totals: this.state.totals,
             customer_name: this.state.customer_name,
         }
         Axios.post('/api/generateInvoice', data).then( res =>{
-           this.setState({generateShow:false, alert:true})
+           this.setState({generateShow:false, alert:true, BillNumber:res.data.insertId, cartItems:[], totals:{
+            totalAmount:0,
+            totalGST:0,
+            totalQty:0
+           }})
         }).catch(err=> console.log(err));
     }
     

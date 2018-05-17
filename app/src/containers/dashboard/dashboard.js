@@ -9,7 +9,7 @@ import Header from '../../components/Header/Header';
 import Card from '../../components/UI/card/card';
 import AddProduct from '../Products/AddProducts';
 import Button from '../../components/UI/Buttons/Buttons';
-import EditProduct from '../Products/editProduct';
+import DisplayAllProductsInfo from '../Products/AllProduct';
 
 class Dashboard extends Component {
     state = {
@@ -26,10 +26,11 @@ class Dashboard extends Component {
                 ids:2,
                 pathname:'products'      
             },
-            availQty:{
+            allProducts:{
                 name:"Get All Products Details",
                 icon:"fa-shopping-cart" ,
-                ids:3             
+                ids:3 ,
+                pathname:'allproducts'            
             },
             billHistory:{
                 name:"Get Bill History",
@@ -43,12 +44,11 @@ class Dashboard extends Component {
                 ids:5              
             }
         },
-        showModel:null
+        showModel:null,
     }
     
 
     render(){
-        console.log(this.state)
         let dashboardAction = [{...this.state.dashboardItems}]
         let cards = dashboardAction.map( (items, i) => {
             let eachCard =[]
@@ -66,12 +66,12 @@ class Dashboard extends Component {
         return(
             <Aux>
                 <Header logoutHandler={this.Logout} />              
-                    { this.props.match.isExact ? <div className="row dashboard"> {cards} </div> : null }           
+                 { this.props.match.isExact ? <div className="row dashboard"> {cards} </div> : null }           
                 <Route path='/dashboard/products' component={AddProduct} />
+                <Route path='/dashboard/allproducts' component={DisplayAllProductsInfo} />
             </Aux>
         )
     }
-
 
 }
 

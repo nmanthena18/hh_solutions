@@ -16,6 +16,11 @@ const reducer = (state = initialState, action) =>{
                 ...state,
                 auth:action.auth
             };
+        case actionTypes.ALLPRODUCTS_INFO:
+            return{
+                ...state,
+                productsData:action.productsData
+            };
         default :
             return state;
         
