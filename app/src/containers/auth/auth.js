@@ -7,6 +7,7 @@ import Input from '../../components/UI/Input/Input';
 import Axios from '../../Axios';
 import {Link, Redirect} from 'react-router-dom';
 import * as actionTypes from '../../Store/actions';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 class Auth extends Component {
     state ={
@@ -46,15 +47,6 @@ class Auth extends Component {
         }).catch(err =>{
             console.log(err)
         })
-    }
-
-    Test = () =>{
-        Axios.get('/api/test').then(res =>{
-            console.log(res)
-        }).catch(err =>{
-            console.log(err)
-        })
-        this.setState({session:true});
     }
 
     changeHandler = (e) => {
@@ -107,11 +99,9 @@ class Auth extends Component {
                             <form autoComplete="no-value">
                                 <Input classes="form-control" isInvalid={this.state.formValidation.user_id.valid} 
                                 touched={this.state.formValidation.user_id.touched}
-                                value={this.state.user_id}
                                 change={(e) => {this.changeHandler(e)}} placeholder="Enter your Id" name="user_id" value={this.state.form.user_id} />
                                 <Input classes="form-control" isInvalid={this.state.formValidation.password.valid}
                                 touched={this.state.formValidation.password.touched}
-                                value={this.state.password}
                                 change={(e) => {this.changeHandler(e)}} inpType="password" placeholder="Enter your password" name="password" value={this.state.form.password}/>
                                 <Button classes="btn btn-primary" clicked={this.Login}
                                     disabled={!this.state.formIsValid}
@@ -143,4 +133,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps) (withErrorHandler(Auth, Axios));

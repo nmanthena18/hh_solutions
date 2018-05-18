@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Route, Link, withRouter} from 'react-router-dom';
+import {Route, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
@@ -8,7 +8,6 @@ import Axios from '../../Axios';
 import Header from '../../components/Header/Header';
 import Card from '../../components/UI/card/card';
 import AddProduct from '../Products/AddProducts';
-import Button from '../../components/UI/Buttons/Buttons';
 import DisplayAllProductsInfo from '../Products/AllProduct';
 
 class Dashboard extends Component {

@@ -35,7 +35,7 @@ class Billing extends Component {
                             <td>{item.totalGST}</td>
                             <td><Input change={(e) => this.addToItemHandler(item, e.target.value)} classes="qty-input form-control" value={item.purchaseQty} name="qty" placeholder="Enter Qty" /></td>
                             <td>{item.totalPrice}</td>
-                            <td><Button classes="btn btn-success" clicked={(e) => this.addToItemHandler(item, parseInt(item.purchaseQty) + 1)}><i className="fas fa-plus-circle"></i></Button> &nbsp;
+                            <td><Button classes="btn btn-success" clicked={(e) => this.addToItemHandler(item, parseInt(item.purchaseQty, 10) + 1)}><i className="fas fa-plus-circle"></i></Button> &nbsp;
                                 <Button classes="btn btn-danger" clicked={(e) => this.removeItemHandler(item)} ><i className="fas fa-trash-alt"></i></Button></td>
                         </tr>
                 });
@@ -45,7 +45,7 @@ class Billing extends Component {
                 <div className="row">
                     <div className="col-3"></div>
                         <div className="col-6">
-                            <AutoComplete queryString={this.state.queryString} recordsShow={this.state.showRecords} data={this.state.data} queryString={this.state.queryString} query={this.searchQuery} itemSelected={this.addToItemHandler} />
+                            <AutoComplete queryString={this.state.queryString} recordsShow={this.state.showRecords} data={this.state.data} query={this.searchQuery} itemSelected={this.addToItemHandler} />
                         </div>
                     <div className="col-3"></div>
                 </div>
@@ -157,7 +157,7 @@ class Billing extends Component {
                                         classes="btn btn-danger form-control">CANCEL</Button>
                                 </div>
                                 <div className="col text-right">                                    
-                                    <Button disabled={this.state.cartItems.length <= 0} 
+                                    <Button 
                                         disabled={!this.state.receivedAmount}
                                         clicked={this.generateInvoiceHandler}
                                         classes="btn btn-success">GENERATE INVOICE</Button>
@@ -236,7 +236,7 @@ class Billing extends Component {
         for(let i = 0; i < this.state.cartItems.length; i++){
             obj.totalAmount+= this.state.cartItems[i].prd_price * this.state.cartItems[i].purchaseQty;
             obj.totalGST+= this.state.cartItems[i].prd_gst * this.state.cartItems[i].purchaseQty;
-            obj.totalQty+= parseInt(this.state.cartItems[i].purchaseQty);
+            obj.totalQty+= parseInt(this.state.cartItems[i].purchaseQty, 10);
         }
         return obj;
     }

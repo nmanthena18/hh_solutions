@@ -186,3 +186,14 @@ button.close {
 .close span {
   font-size: 1.5rem;
 }
+
+.error-box .title{
+  display:none;
+}
+.modal-box.error-box {
+  border:sandybrown 2px solid;
+  min-height:50px;
+  text-align: center;
+  color:#dc3545;
+  top: 45%;
+}

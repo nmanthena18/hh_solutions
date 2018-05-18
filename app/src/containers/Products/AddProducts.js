@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import {Route, Redirect, withRouter, Switch, Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import Auth from '../auth/auth';
 import Aux from '../../hoc/Auxulary';
 import Modal from '../../components/UI/Modal/Modal';
 import Button from '../../components/UI/Buttons/Buttons';
@@ -14,12 +13,14 @@ import Axios from '../../Axios';
 import DataGrid from '../DataGrid/DataGrid';
 import * as Data from '../../components/commonData/commonData';
 import * as actionTypes from '../../Store/actions';
+import Preloader from '../../components/UI/Preloader/Preloader';
 
 class AddProduct extends Component {   
     state ={
         showModel:false,
         prd_added:false,
         isFormValid:false,
+        preloader:true,
         form:{
             prd_name:'',
             prd_scode:'',
@@ -124,7 +125,7 @@ class AddProduct extends Component {
                     change={(e) => {this.changeHandler(e)}} 
                     classes="form-control" inpType="text" /> <br/>
                 <Input name="prd_qty" 
-                    placeholder="Enter Product Quantity" value="1" 
+                    placeholder="Enter Product Quantity"  
                     change={(e) => {this.changeHandler(e)}}
                     isInvalid={this.state.formValidation.prd_qty.valid} 
                     value={this.state.form.prd_qty}
@@ -133,7 +134,7 @@ class AddProduct extends Component {
                     classes="form-control" inpType="text" /> <br/>
                 <Input name="prd_gst" 
                     inputGroupSymbol="%"
-                    placeholder="Enter Product GST" value="18"
+                    placeholder="Enter Product GST" 
                     value={this.state.form.prd_gst}
                     change={(e) => {this.changeHandler(e)}}
                     isInvalid={this.state.formValidation.prd_gst.valid} 
@@ -143,12 +144,11 @@ class AddProduct extends Component {
                     placeholder="Enter Description"
                     change={(e) => {this.changeHandler(e)}}
                     isInvalid={this.state.formValidation.prd_desc.valid} 
-                    value={this.state.form.prd_desc}
                     touched={this.state.formValidation.prd_desc.touched}
                     value={this.state.form.prd_desc}
                     classes="form-control" inpType="textarea">
                     </Input>                
-                <Button classes="btn btn-primary" disabled={!this.state.isFormValid} clicked={() => {this.state.page == 'addProduct'? this.saveProduct() : this.updateProduct()}}> {this.state.page == 'addProduct' ? 'Save Product' : 'Update Product'} </Button> &nbsp;
+                <Button classes="btn btn-primary" disabled={!this.state.isFormValid} clicked={() => {this.state.page === 'addProduct'? this.saveProduct() : this.updateProduct()}}> {this.state.page === 'addProduct' ? 'Save Product' : 'Update Product'} </Button> &nbsp;
                 <Button classes="btn btn-danger" clicked={this.closeModal}>Cancel</Button>
             </Aux>
         );
@@ -182,6 +182,7 @@ class AddProduct extends Component {
                 <Alert classes="alert-success" show={this.state.alertMesssage} alertAutoClose={ this.state.alertMesssage ? this.alertAutoClose(2000) : null}>
 +                    {this.state.alertMesssage}
 +                </Alert>
+                <Preloader show={this.state.preloader} />
                 <DataGrid gridData={this.state.gridData} columns={this.state.columns} edit={this.editProduct} />
                 <br/>
                 <br/>
@@ -206,7 +207,6 @@ class AddProduct extends Component {
     editProduct = (id) =>{
         Axios.post('/api/editProduct', {id}).then(res => {
             let formValidation = {...this.state.formValidation}
-            let validation = "validation"
             for(let key in res.data[0]){
                 //formValidation.key.valid = true;
                 let obj = {...formValidation[key]};
@@ -273,10 +273,12 @@ class AddProduct extends Component {
             if(!this.state.gridData){
                 this.props.getAllProductsInfo(res.data);
                 this.setState({
-                    gridData : res.data,                    
+                    gridData : res.data,  
+                    preloader:false                  
                 });
             }
         }).catch(err => {
+            this.setState({preloader:false});
             console.log(err);
         });
     }

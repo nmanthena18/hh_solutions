@@ -1,5 +1,4 @@
 import React from 'react';
-import Aux from '../../../hoc/Auxulary'
 
 const Input = (props) =>{
     let ElementClasses = [props.classes]
@@ -27,7 +26,7 @@ const Input = (props) =>{
             {props.children} </select>
             break;
         default : 
-            Element = <input
+            Element = <div><input
                     onChange={props.change}
                     disabled={props.disabled}
                     type={props.inpType || 'text'}
@@ -35,8 +34,7 @@ const Input = (props) =>{
                     placeholder={props.placeholder}
                     value={props.value}
                     defaultChecked={props.checked}
-                    name={props.name}/>
-                    {props.children}      
+                    name={props.name}/> {props.children}   </div>   
     }
     return (
         <div className={props.inputGroupSymbol ? "input-group" :"form-group" }>

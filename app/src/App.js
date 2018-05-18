@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {BrowserRouter, Route, Redirect, withRouter} from 'react-router-dom';
+import {BrowserRouter, Route, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import './App.css';
 
@@ -15,8 +15,8 @@ class App extends Component {
       <BrowserRouter>
         <div className="container">
           <Aux>
-              { this.isLoggedIn()  }                   
-              {/* <Route path='/dashboard' component={ Dashboard } /> */}
+              {/* { this.isLoggedIn()  }                    */}
+              <Route path='/dashboard' component={ Dashboard } />
               <Route path='/' exact component={Auth} />
               <Route path='/register' component={Signup} />              
               <Route path='/dashboard/billing' component={Billing} />              

@@ -19,7 +19,7 @@ class AutoComplete extends Component {
                 return <li key={i} onClick={() => this.props.itemSelected(item, 1)} className='item' id={item.prd_id}><label>{item.prd_name}</label><span className="price">INR: {item.prd_price}</span><span className={qtyClass}>AQ :{item.prd_qty}</span></li>;
             });
 
-            if(this.state.query && queryData && queryData.length == 0){
+            if(this.state.query && queryData && queryData.length === 0){
                 filterData= <li className='item'>No records found</li>;
             }
         }

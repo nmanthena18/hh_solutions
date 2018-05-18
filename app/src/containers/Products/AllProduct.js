@@ -69,9 +69,9 @@ class AllProducts extends Component {
         let prdsInfo = {}
         for( let i=0; i<products.length; i++){
             prdsInfo.typeOfPrds = i+1;
-            prdsInfo.stock = stock+= parseInt(products[i].prd_qty);
-            prdsInfo.stockAmount = totalStackAmount+=parseInt(products[i].prd_price * products[i].prd_qty);
-            prdsInfo.stockAmountCode = totalStackAmountCode+=parseInt(products[i].prd_scode * products[i].prd_qty);
+            prdsInfo.stock = stock+= parseInt(products[i].prd_qty, 10);
+            prdsInfo.stockAmount = totalStackAmount+=parseInt(products[i].prd_price * products[i].prd_qty, 10);
+            prdsInfo.stockAmountCode = totalStackAmountCode+=parseInt(products[i].prd_scode * products[i].prd_qty, 10);
         }
 
         this.setState({
