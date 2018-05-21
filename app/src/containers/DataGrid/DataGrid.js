@@ -9,6 +9,10 @@ export default class DataGrid extends Component {
         header: null,
         data:null,
     }   
+    constructor(props){
+        super(props);
+        this.state = {data: this.props.gridData}
+      }
     
     render() {
         let Body;  
@@ -20,7 +24,9 @@ export default class DataGrid extends Component {
             return columns;
         }
         if(this.props.gridData){
-            Body = this.props.gridData.map( (item, i, arr)=>{ 
+            
+            if(this.state.data){
+            Body = this.state.data.map( (item, i, arr)=>{ 
                 let ii = i+1;
                 item.index = ii;
                 return (
@@ -28,7 +34,9 @@ export default class DataGrid extends Component {
                         { generateColumns(item)}
                     </div>     
                 )
-            });           
+            });    
+            
+        }
                       
         }
         let Header = this.props.columns.map((item, i)=>{
@@ -49,7 +57,7 @@ export default class DataGrid extends Component {
         let string = e.target.value.toLowerCase();
         let filterArray = this.props.gridData ? this.props.gridData.filter( (v, i,arr) =>{
             return v[q].toString().toLowerCase().indexOf(string) > -1;
-        }) : null;      
+        }) : null;    
         this.setState(
             {
                 data: filterArray
@@ -57,12 +65,17 @@ export default class DataGrid extends Component {
         )
        
     }
-    updateState = () =>{
+    updateState = (data) =>{
         if(!this.state.data){
         this.setState({
-            data:this.props.gridData
+            data:data
         });
         }
+    }
+
+    componentWillReceiveProps(nextProps){
+       this.updateState(nextProps.gridData)
+
     }
 
     edit(id){

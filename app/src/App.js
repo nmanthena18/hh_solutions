@@ -8,6 +8,7 @@ import Signup from './containers/Signup/Signup';
 import Auth from './containers/auth/auth';
 import Dashboard from './containers/dashboard/dashboard';
 import Billing from './containers/Billing/Billing';
+import BillHistory from './containers/Billing/BillHistory';
 
 class App extends Component {
   render() {
@@ -19,7 +20,8 @@ class App extends Component {
               <Route path='/dashboard' component={ Dashboard } />
               <Route path='/' exact component={Auth} />
               <Route path='/register' component={Signup} />              
-              <Route path='/dashboard/billing' component={Billing} />              
+              <Route path='/dashboard/billing' component={Billing} />          
+              <Route path='/dashboard/billinghistory' component={BillHistory} />          
           </Aux>
         </div>
       </BrowserRouter>

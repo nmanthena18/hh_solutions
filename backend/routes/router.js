@@ -86,6 +86,20 @@ Router.post('/generateInvoice', function(req, res){
   })
 });
 
+Router.get('/getbillhistory', function(req, res){
+  Tasks.getBillHistory(req, res, (err, rows)=>{
+    if(err)return res.status(400).send({message: "Something went wrong"});
+    res.json(rows);
+  })
+});
+
+Router.post('/getsinglebillinformation', function(req, res){
+  Tasks.getSingleBillInformation(req, res, (err, rows)=>{
+    if(err)return res.status(400).send({message: "Something went wrong"});
+    res.json(rows);
+  })
+});
+
 
 isLoggeIn = (req, res) => {
  if(!req.session.user) {res.status(401).send({message: "Not authorized"}) }
