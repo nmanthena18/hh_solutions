@@ -21,9 +21,18 @@ class BillHistory extends Component {
     }
     render(){
             let BillInfo
-            if(this.state.viewBillData){
-                let data = this.state.viewBillData[0];               
-                BillInfo = <table className="table">
+            if(this.state.viewBillData && this.state.billPrds){
+                let data = this.state.viewBillData[0];    
+                let items = this.state.billPrds.prds_info.map( (item, i) =>{
+                    return (<tr key={i}>
+                        <td>{i+1}</td>
+                        <td>{item.prd_name}</td>
+                        <td>{this.state.billPrds.bill_info[i].prd_qty}</td>
+                        <td>{this.state.billPrds.bill_info[i].prd_qty} X {item.prd_price} = {this.state.billPrds.bill_info[i].total}</td>
+                        <td>{item.prd_scode}</td>
+                    </tr>)
+                });       
+                BillInfo = <Aux><table className="table alert alert-primary">
                     <thead>
                     <tr><th>Bill Number / Id</th><th>Customer Name</th><th>Payment Type</th><th>Total Amount</th><th>Received Amount</th><th>Purchase Date</th></tr>
                     </thead>
@@ -38,6 +47,16 @@ class BillHistory extends Component {
                         </tr>
                     </tbody>
                 </table>
+                <table className="table">
+                    <thead>
+                        <tr><th>#</th><th>Name</th><th>Purchased Quantity</th><th>Total</th><th>S Code</th></tr>
+                    </thead>
+                    <tbody>
+                        {items}
+                    </tbody>
+                </table>
+                </Aux>
+
             }
         return(
             <Aux>

@@ -1,7 +1,6 @@
 
 const cPool = require('../config/connectionPool');
 var bcrypt = require('bcrypt');
-var sync = require('sync');
 
 var Tasks={ 
 	getAllUsers:function(req, res, callback){
@@ -157,34 +156,7 @@ var Tasks={
 			bill_info:""
 		};
 		cPool(res, (connect) =>{
-			var first = new Promise( (resolve, reject) =>{
-				connect.query(sqlQuery, (err, rows)=> {
-					if(err) reject(err);
-					resolve(rows)
-				});
-			});
-
-			var second = (rows) => { return new Promise( (resolve, reject) =>{
-				let data = {billing_data : rows, prd_details:[]}
-				for (let i =0; i < rows.length; i++) {
-					let query = "SELECT * FROM `products` WHERE `prd_id`='"+rows[i].prd_id+"';"
-					connect.query.sync(query, (err, row) => {
-						if (err) {
-							reject(err,'');
-						}
-						data.prd_details.push(row)
-					});
-				}
-				require('deasync').sleep(100);
-				callback(err,data);
-				//resolve(data);
-			});
-		}
-			// first.then(second).then(resonse =>{
-			// 	console.log(resonse)
-			// 	//res.status(200).send({resonse});
-			// });
-			sync(connect.query(sqlQuery, (err, rows)=> {
+			connect.query(sqlQuery, (err, rows)=> {
 				prdData.bill_info =rows;
 				if(err) return callback(err,'');
 				  if(rows){
@@ -194,14 +166,15 @@ var Tasks={
 							if (err) {
 								return callback(err,'');
 							}
-							prdData["prds_info"].push(row);
-						});
+							prdData["prds_info"].push(row[0]);
+							if(i ===  rows.length-1){
+								connect.release();
+								return callback(err,prdData);
+							}
+						});						
 					}
-					console.log(prdData)
-					return callback(err,prdData);
 				  }
-				  //connect.release();
-			}))
+			})
 		});
 	},
 

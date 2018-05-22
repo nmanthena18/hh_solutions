@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Route, Link} from 'react-router-dom';
+import {Route, Link, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
@@ -37,11 +37,11 @@ class Dashboard extends Component {
                 ids:4,
                 pathname:'billinghistory'            
             },
-            DailyBillHistory:{
-                name:"Today Bill History",
-                icon:"fa-history",
-                ids:5              
-            }
+            // DailyBillHistory:{
+            //     name:"Today Bill History",
+            //     icon:"fa-history",
+            //     ids:5              
+            // }
         },
         showModel:null,
     }
@@ -64,7 +64,7 @@ class Dashboard extends Component {
         });
         return(
             <Aux>
-                <Header logoutHandler={this.Logout} />              
+                <Header logoutHandler={this.Logout} {...this.props} />              
                  { this.props.match.isExact ? <div className="row dashboard"> {cards} </div> : null }           
                 <Route path='/dashboard/products' component={AddProduct} />
                 <Route path='/dashboard/allproducts' component={DisplayAllProductsInfo} />
@@ -80,4 +80,4 @@ const mapStateToProps = (state) =>{
     }
 }
 
-export default connect(mapStateToProps) (withErrorHandler(Dashboard, Axios));
+export default connect(mapStateToProps) (withRouter(withErrorHandler(Dashboard, Axios)));

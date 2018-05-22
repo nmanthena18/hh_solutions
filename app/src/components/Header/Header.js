@@ -17,7 +17,7 @@ const Header = (props) =>{
     return(
         <div>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <span className="navbar-brand mr-auto p-2 bd-highlight" href="#"> Welcome to Hanuman Hardwares</span>
+                <span className="navbar-brand mr-auto p-2 bd-highlight" href="#"> Welcome to HH</span>
                 <div className="bd-highlight">
                     <span>{props.auth}</span>
                     <ul className="topNav">
@@ -47,5 +47,5 @@ const mapDispatchToProps = (dispatch) => {
         logout: (s) => { dispatch({type: actionTypes.LOGOUT_AUTHENDICATION, auth:s})}
     };
 }
-
-export default connect(mapStateToProps, mapDispatchToProps) (Header);
+ 
+export default connect(mapStateToProps, mapDispatchToProps) (Header); 
