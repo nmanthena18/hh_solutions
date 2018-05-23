@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {BrowserRouter, Route, Redirect} from 'react-router-dom';
+import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
 import {connect} from 'react-redux';
 import './App.css';
 
@@ -12,24 +12,34 @@ import BillHistory from './containers/Billing/BillHistory';
 
 class App extends Component {
   render() {
+      let Routes = (
+        <Switch>
+            <Route path='/' exact component={Auth} />
+            <Route path='/register' component={Signup} />
+            <Redirect to="/" />
+        </Switch>
+       )
+       if(this.props.auth){
+        Routes = (
+          <Aux>
+          <Route path='/dashboard' component={ Dashboard } />
+        <Switch>
+          <Route path='/dashboard/billing' component={Billing} />          
+          <Route path='/dashboard/billinghistory' component={BillHistory} /> 
+        </Switch> </Aux>);
+       }
+       console.log(this.props.auth)
     return (
       <BrowserRouter>
         <div className="container">
-          <Aux>
-              { this.isLoggedIn()  }                    
-              {/* <Route path='/dashboard' component={ Dashboard } /> */}
-              <Route path='/' exact component={Auth} />
-              <Route path='/register' component={Signup} />              
-              <Route path='/dashboard/billing' component={Billing} />          
-              <Route path='/dashboard/billinghistory' component={BillHistory} />          
-          </Aux>
+            {Routes}
         </div>
       </BrowserRouter>
     );
   }
 
   isLoggedIn = () => {
-      return !this.props.auth ? <Redirect to="/" /> : <Route path='/dashboard' component={ Dashboard } /> 
+     // return !this.props.auth ? <Redirect to="/" /> : <Route path='/dashboard' component={ Dashboard } /> 
   }
 
 }

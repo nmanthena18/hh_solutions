@@ -5,7 +5,7 @@ import Aux from '../../hoc/Auxulary';
 import Button from '../../components/UI/Buttons/Buttons';
 import Input from '../../components/UI/Input/Input';
 import Axios from '../../Axios';
-import {Link, Redirect} from 'react-router-dom';
+import {Link, Redirect, withRouter} from 'react-router-dom';
 import * as actionTypes from '../../Store/actions';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
@@ -43,6 +43,7 @@ class Auth extends Component {
                 this.setState({
                     email:res.data.email
                 });
+               this.props.history.push('/dashboard')
             }
         }).catch(err =>{
             console.log(err)
@@ -113,7 +114,7 @@ class Auth extends Component {
                     </div>
                 </div>
                 {this.state.email}
-                {this.state.email ? <Redirect to="/dashboard" /> : null}            
+                {/* {this.state.email ? <Redirect to="/dashboard" /> : null}             */}
             </Aux>
         );
     }
@@ -133,4 +134,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (withErrorHandler(Auth, Axios));
+export default connect(mapStateToProps, mapDispatchToProps) (withRouter(withErrorHandler(Auth, Axios)));
