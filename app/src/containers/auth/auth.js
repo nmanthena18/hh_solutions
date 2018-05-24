@@ -5,7 +5,7 @@ import Aux from '../../hoc/Auxulary';
 import Button from '../../components/UI/Buttons/Buttons';
 import Input from '../../components/UI/Input/Input';
 import Axios from '../../Axios';
-import {Link, Redirect, withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import * as actionTypes from '../../Store/actions';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
@@ -39,7 +39,7 @@ class Auth extends Component {
     Login = () =>{
         Axios.post('/api/login', this.state.form).then(res =>{
             if(res.data.email){
-                this.props.login(res.data.email);
+                this.props.login(res.data);
                 this.setState({
                     email:res.data.email
                 });

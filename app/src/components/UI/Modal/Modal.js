@@ -9,7 +9,7 @@ class Modal extends Component{
                 <Overlay clicked={this.props.closeModal} show={this.props.show} />
                 <div className={"modal-box "+this.props.classes}
                         style={{
-                            transform:this.props.show ? 'translateY(0)' : 'translateY(-100vh)',
+                            transform:this.props.show ? 'translateY(0)' : 'translateY(-170vh)',
                             opacity:this.props.show ? '1':'0'
                         }}
                     >

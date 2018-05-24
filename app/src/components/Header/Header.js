@@ -15,12 +15,18 @@ const Header = (props) =>{
         });
     }
     return(
-        <div>
+        <div className="row" style={{marginLeft:'-15px', marginRight:"-15px"}}>
+            <div className="col no-gutters">
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <span className="navbar-brand mr-auto p-2 bd-highlight" href="#"> Welcome to HH</span>
                 <div className="bd-highlight">
-                    <span>{props.auth}</span>
+                    
                     <ul className="topNav">
+                    { props.auth ? 
+                    <li className="item">
+                        Welcome <span>{ props.auth.name }</span>
+                    </li> : null
+                    }
                         <li className="item">
                             <NavLink to='/dashboard'>Dashboard</NavLink>
                         </li>
@@ -32,6 +38,7 @@ const Header = (props) =>{
                 </div>
                 {props.children}
             </nav>
+            </div>
         </div>
     )
 }

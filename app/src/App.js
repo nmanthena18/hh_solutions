@@ -19,7 +19,7 @@ class App extends Component {
             <Redirect to="/" />
         </Switch>
        )
-       if(this.props.auth){
+      if(this.props.auth){
         Routes = (
           <Aux>
           <Route path='/dashboard' component={ Dashboard } />
@@ -28,10 +28,9 @@ class App extends Component {
           <Route path='/dashboard/billinghistory' component={BillHistory} /> 
         </Switch> </Aux>);
        }
-       console.log(this.props.auth)
     return (
       <BrowserRouter>
-        <div className="container">
+        <div className="container-fluid">
             {Routes}
         </div>
       </BrowserRouter>

@@ -113,7 +113,7 @@ var Tasks={
 	generateInvoice:(req, res, callback) =>{
 		let billing_data = req.body;
 		let billing_query = "INSERT into billing_details (customer_name,payment_type,received_amount,total_amount) VALUES ('" + billing_data.customer_name + "', '" + billing_data.paymentMethod + "', '" + billing_data.receivedAmount + "', '" + billing_data.totals.totalAmount + "')";
-
+		console.log(billing_data)
 		cPool(res, (connect) =>{
 			let bill_number = 0;
 			connect.query(billing_query, (err, rows) => {
@@ -124,6 +124,9 @@ var Tasks={
 				if (bill_number) {
 					var product_cart = billing_data.cart;
 					for (key in product_cart) {
+						if(product_cart[key].prd_qty < product_cart[key].purchaseQty){
+							return callback(err, {message:"You don't have expected quantity for "+product_cart[key].prd_name+" product"});
+						}
 						let bill_product_query = "INSERT into bill_products (prd_id,bill_id,prd_price,prd_gst,prd_qty,total) VALUES (" + product_cart[key].prd_id + ", " + bill_number + ", '" + product_cart[key].prd_price + "', '" + product_cart[key].totalGST + "', '" + product_cart[key].purchaseQty + "', '" + product_cart[key].totalPrice + "');UPDATE products SET `prd_qty`='"+(product_cart[key].prd_qty - product_cart[key].purchaseQty)+"' WHERE `prd_id`="+product_cart[key].prd_id;
 						connect.query(bill_product_query, [1,2], (err, rows) => {
 							if (err) {

@@ -57,7 +57,6 @@ class AllProducts extends Component {
     }
 
     componentDidMount(){
-        console.log(this.props)
         if(!this.props.productsData){
             this.loadAllProduct();            
         }else{

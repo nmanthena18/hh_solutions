@@ -1,17 +1,17 @@
 import React, {Component} from 'react';
 
 class Alert extends Component {
-    closeAlert = () =>{
-        console.log(this.props)
+
+    closeAlert = (n) =>{
+       this.props.close(n)
     }
-    
     render(){
         let alert = <div></div>;
         if(this.props.show){
             let autoClose = this.props.autoclose;
-           alert=<div className={"alert " +this.props.classes}  role="alert"  autoclose={this.props.autoclose ?  this.alertAutoClose(autoClose) :null }>
+           alert=<div className={"alert " +this.props.classes}  autoclose={this.props.autoclose ?  this.alertAutoClose(autoClose) :null }>
                     {this.props.children}
-                    <button className="close" onClick={this.closeAlert}><span aria-hidden="true">×</span></button> 
+                    <button className="close" onClick={(e) => this.closeAlert(this.props.type)}><span aria-hidden="true">×</span></button> 
                 </div>
         }
         return (
@@ -21,8 +21,7 @@ class Alert extends Component {
                      
         )
         
-    }
-    
+    }    
 }
 
 export default Alert;

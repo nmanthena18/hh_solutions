@@ -49,7 +49,7 @@ class BillHistory extends Component {
                 </table>
                 <table className="table">
                     <thead>
-                        <tr><th>#</th><th>Name</th><th>Purchased Quantity</th><th>Total</th><th>S Code</th></tr>
+                        <tr><th>#</th><th>Name</th><th>Purchased Quantity</th><th>Actual Total</th><th>S Code</th></tr>
                     </thead>
                     <tbody>
                         {items}
@@ -73,7 +73,7 @@ class BillHistory extends Component {
     getBillHistory = () =>{
         Axios.get('/api/getbillhistory').then(res =>{
             res.data.map((item, i) => {
-                return  item["created"] = new Date(item["created"]).toLocaleDateString(), item["id"] = item["bill_id"]
+                return  (item["created"] = new Date(item["created"]).toLocaleDateString(), item["id"] = item["bill_id"] )
             });
                 this.setState({gridData:res.data});
             }).catch (err =>{

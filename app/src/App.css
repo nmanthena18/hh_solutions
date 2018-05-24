@@ -26,3 +26,18 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.topNav .item:nth-child(even){
+  background-color:transparent;
+}
+.bg-light {
+  background-color: #f44336 !important;
+  color:#fff;
+}
+.bg-light a {
+  color:#fff;
+}
+.no-gutters{
+  padding-left:0;
+  padding-right:0;
+}
