@@ -18,7 +18,7 @@ const Header = (props) =>{
         <div className="row" style={{marginLeft:'-15px', marginRight:"-15px"}}>
             <div className="col no-gutters">
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <span className="navbar-brand mr-auto p-2 bd-highlight" href="#"> Welcome to HH</span>
+                <span className="navbar-brand mr-auto p-2 bd-highlight"><img src="../logo.png" width="32px" alt="Logo" /> HH</span>
                 <div className="bd-highlight">
                     
                     <ul className="topNav">
@@ -37,7 +37,7 @@ const Header = (props) =>{
                     
                 </div>
                 {props.children}
-            </nav>
+            </nav> <br/>
             </div>
         </div>
     )

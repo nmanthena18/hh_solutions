@@ -32,6 +32,8 @@ class App extends Component {
       <BrowserRouter>
         <div className="container-fluid">
             {Routes}
+            <br/>
+            <p className="text-center">©2018 HH</p>
         </div>
       </BrowserRouter>
     );

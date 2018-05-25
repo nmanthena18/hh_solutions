@@ -26,7 +26,7 @@ body, *{
   margin-top:200px;
 }
 .card{
-  border:sandybrown 2px solid;
+  border:#329a67 2px solid;
   margin-bottom: 20px;
 }
 h5.card-header{
@@ -75,6 +75,7 @@ h5.card-header{
 
 .topNav{
   list-style: none;
+  margin-bottom: 0;
 }
 .topNav li {
   display:inline-block;

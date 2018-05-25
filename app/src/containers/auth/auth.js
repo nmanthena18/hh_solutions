@@ -93,7 +93,7 @@ class Auth extends Component {
             <Aux>
                 <div className="row">
                     <div className="col-md-6 offset-md-3 m-t-100">
-                        <h2 className="text-center">Welcome to Bill desk solution</h2>
+                        <h2 className="text-center"><img src="./logo.png" alt="Logo" /></h2>
                         <div className="card border-secondary" >
                         <div className="card-header">Login</div>
                         <div className="card-body">

@@ -31,11 +31,12 @@
   background-color:transparent;
 }
 .bg-light {
-  background-color: #f44336 !important;
-  color:#fff;
+  background-color: #d4d4d4 !important;
+  color:#000;
+  border-bottom: solid 2px #bcbcbc;
 }
 .bg-light a {
-  color:#fff;
+  color:#007bff;
 }
 .no-gutters{
   padding-left:0;
