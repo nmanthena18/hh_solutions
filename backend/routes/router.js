@@ -5,6 +5,22 @@ const Tasks = require('./tasks');
 var jwt = require('jsonwebtoken');
 
 
+//Login
+Router.post('/login', function(req,res){
+  Tasks.signIn(req, res, (err,rows)=>{
+    if(err) return res.status(400).send({error:err.code, message:err.sqlMessage});
+    if(rows.length <= 0) return res.status(400).send({message:"Invalid Credentials"});
+    var token = jwt.sign({ id: rows[0].user_id }, 'heydonttrustme', {
+      expiresIn : 60*60
+    });
+    req.session.user = rows[0].user_id;
+    res.setHeader('x-access-token',token)
+    res.status(200).send({user_id:rows[0].user_id, name:rows[0].name, email:rows[0].email, message:"Successfully Loggedin", token});
+  });
+
+  console.log('login')
+});
+
 //Register user
 Router.post('/signup', (req, res) =>{
   Tasks.signUp(req, res, (err,rows)=>{
@@ -13,18 +29,34 @@ Router.post('/signup', (req, res) =>{
   });
 });
 
-//Login
-Router.post('/login', function(req,res){
-  Tasks.signIn(req, res, (err,rows)=>{
-    if(err) return res.status(400).send({error:err.code, message:err.sqlMessage});
-    if(rows.length <= 0) return res.status(400).send({message:"Invalid Credentials"});
-    var token = jwt.sign({ id: rows[0].user_id }, 'heydonttrustme', {
-      expiresIn: 6000 
-    });
-    req.session.user = rows[0].user_id;
-    res.status(200).send({user_id:rows[0].user_id, name:rows[0].name, email:rows[0].email, message:"Successfully loggeding"});
-  });
-});
+
+// check for auth users 
+// Router.use(function(req, res, next) {
+//   // check header or url parameters or post parameters for token
+//   var token = req.body.token || req.query.token || req.headers['x-access-token'];
+//   // decode token
+//   if (token) {
+//     // verifies secret and checks exp   
+//     jwt.verify(token, 'heydonttrustme', function(err, decoded) {
+//       if (err) {
+//         return res.json({ success: false, message: 'Failed to authenticate token.' });    
+//       } else {
+//         // if everything is good, save to request for use in other routes
+//         req.decoded = decoded;    
+//         next();
+//       }
+//     });
+
+//   } else {
+//     // if there is no token
+//     // return an error
+//     return res.status(403).send({ 
+//         success: false, 
+//         message: 'No token provided.' 
+//     });
+
+//   }
+// });
 
 //test
 Router.get('/test', function(req,res){

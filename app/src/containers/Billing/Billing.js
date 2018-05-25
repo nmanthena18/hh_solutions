@@ -174,10 +174,15 @@ class Billing extends Component {
             </Aux>
         )
     }
+
+    config = {
+        headers: { 'x-access-token': localStorage.getItem("token") },
+    };
+    
     searchQuery = (e) =>{
         this.setState({queryString:e})
         if(e.length > 1){
-            Axios.post('api/getProductInfo', {query:e}).then( res =>{
+            Axios.post('api/getProductInfo', {query:e}, this.config).then( res =>{
                 this.setState({
                     showRecords:true,
                     data:res.data
@@ -301,7 +306,7 @@ class Billing extends Component {
             totals: this.state.totals,
             customer_name: this.state.customer_name,
         }
-        Axios.post('/api/generateInvoice', data).then( res =>{
+        Axios.post('/api/generateInvoice', data, this.config).then( res =>{
             if(res.data.message){
                 this.setState({alertDanger:true, alertDangerMsg:res.data.message, generateShow:false});
                 return

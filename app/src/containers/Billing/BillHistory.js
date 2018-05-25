@@ -21,6 +21,7 @@ class BillHistory extends Component {
     }
     render(){
             let BillInfo
+            //console.log(this.props.auth)
             if(this.state.viewBillData && this.state.billPrds){
                 let data = this.state.viewBillData[0];    
                 let items = this.state.billPrds.prds_info.map( (item, i) =>{
@@ -68,10 +69,13 @@ class BillHistory extends Component {
         )
     }
 
+    config = {
+        headers: { 'x-access-token': localStorage.getItem("token") },
+    };
+    
     //get billing details
-
     getBillHistory = () =>{
-        Axios.get('/api/getbillhistory').then(res =>{
+        Axios.get('/api/getbillhistory', this.config).then(res =>{
             res.data.map((item, i) => {
                 return  (item["created"] = new Date(item["created"]).toLocaleDateString(), item["id"] = item["bill_id"] )
             });
@@ -84,7 +88,7 @@ class BillHistory extends Component {
        let BillDetails =  this.state.gridData.filter((v, i) =>{
             return id === v.bill_id
        });
-       Axios.post('/api/getsinglebillinformation', {id}).then( res =>{
+       Axios.post('/api/getsinglebillinformation', {id}, this.config).then( res =>{
             this.setState({billPrds:res.data});
        }).catch(err =>{
            console.log(err)
@@ -95,8 +99,7 @@ class BillHistory extends Component {
 
     closeModal = () =>{
         this.setState({viewBill:false});
-    }
-    
+    }    
 }
 
 export default BillHistory;

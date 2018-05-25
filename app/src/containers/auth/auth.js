@@ -40,6 +40,7 @@ class Auth extends Component {
         Axios.post('/api/login', this.state.form).then(res =>{
             if(res.data.email){
                 this.props.login(res.data);
+                localStorage.setItem('token',res.data.token)
                 this.setState({
                     email:res.data.email
                 });
