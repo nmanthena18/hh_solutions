@@ -13,7 +13,7 @@ class Auth extends Component {
     state ={
         form:{
             user_id:"",
-            password:""
+            password:"",
         },  
         formValidation:{
             user_id:{
@@ -37,6 +37,9 @@ class Auth extends Component {
         formIsValid:false
     }
     Login = () =>{
+        let config = {
+            headers: { 'x-access-token': "login" },
+        };
         Axios.post('/api/login', this.state.form).then(res =>{
             if(res.data.email){
                 this.props.login(res.data);
