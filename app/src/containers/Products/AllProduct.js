@@ -46,7 +46,7 @@ class AllProducts extends Component {
         let config = {
             headers: { 'x-access-token': localStorage.getItem("token") },
           };
-        Axios.get('/api/loadAllPrds', config).then(res => {
+        Axios.get('/api/loadAllPrds').then(res => {
             res.data.map((item, i) => {
                 return  item["prd_created_date"] = new Date(item["prd_created_date"]).toLocaleDateString();
             });

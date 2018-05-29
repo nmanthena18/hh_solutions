@@ -9,9 +9,16 @@ import Auth from './containers/auth/auth';
 import Dashboard from './containers/dashboard/dashboard';
 import Billing from './containers/Billing/Billing';
 import BillHistory from './containers/Billing/BillHistory';
+import Axios from './Axios';
 
 class App extends Component {
   render() {
+
+    Axios.get('/api/').then(res =>{
+      console.log(res)
+    });
+
+
       let Routes = (
         <Switch>
             <Route path='/' exact component={Auth} />
@@ -42,6 +49,8 @@ class App extends Component {
   isLoggedIn = () => {
      // return !this.props.auth ? <Redirect to="/" /> : <Route path='/dashboard' component={ Dashboard } /> 
   }
+
+ 
 
 }
 

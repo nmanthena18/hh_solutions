@@ -11,6 +11,11 @@ var Tasks={
 			});
 		});
 	},
+
+	authCheck : (req, res, callback) =>{
+		console.log(1111)
+	},
+
 	signUp:function(req, res, callback){
 		let data = req.body;
 		bcrypt.genSalt(7, function(err, salt) {
@@ -29,7 +34,7 @@ var Tasks={
 	},
 
 	signIn:(req, res, callback) =>{
-		let uName = req.body.user_id;		
+		let uName = req.body.user_id;	
 		cPool(res, (connect) =>{
 			connect.query('SELECT * from users where user_id = '+uName,(err, rows)=> {
 				connect.release();
@@ -113,7 +118,6 @@ var Tasks={
 	generateInvoice:(req, res, callback) =>{
 		let billing_data = req.body;
 		let billing_query = "INSERT into billing_details (customer_name,payment_type,received_amount,total_amount) VALUES ('" + billing_data.customer_name + "', '" + billing_data.paymentMethod + "', '" + billing_data.receivedAmount + "', '" + billing_data.totals.totalAmount + "')";
-		console.log(billing_data)
 		cPool(res, (connect) =>{
 			let bill_number = 0;
 			connect.query(billing_query, (err, rows) => {
