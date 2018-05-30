@@ -9,7 +9,13 @@ var getConnection = require('./backend/config/connectionPool')
 
 var app = express();
 
-const Router = require('./backend/routes/router')
+const Router = require('./backend/routes/router');
+
+app.use(express.static(__dirname + '/app/build'));
+app.engine('html', require('ejs').renderFile);
+app.get('/', function (req, res) {
+    res.sendFile('index.html');
+});
 
 //app.use(express.static(__dirname + '/app/build'));
 // app.engine('html', require('ejs').renderFile);
@@ -17,11 +23,11 @@ const Router = require('./backend/routes/router')
 //     console.log(res)
 //     res.sendFile(__dirname + '/app/build/index.html');
 // });
-  
-  //app.use(express.static(path.join(__dirname, 'public')));
-  // app.get('/', function (req, res) {
-  //   res.sendFile(path.join(__dirname+ '/index.html'));
-  // });
+
+//app.use(express.static(path.join(__dirname, 'public')));
+// app.get('/', function (req, res) {
+//   res.sendFile(path.join(__dirname+ '/index.html'));
+// });
 
   app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -33,13 +39,10 @@ const Router = require('./backend/routes/router')
     next();
   });
   
-
+  console.log(process.env.PUBLIC_URL)
 //view engine setup
 //app.set('app', path.join(__dirname, '/app/build'));
 //app.use(express.static(path.join(__dirname, '/app/build/')));
-
-app.use(express.static(path.join(__dirname, '/app/build/')));
-
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -55,24 +58,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //******SESSION Handle *//
 app.use(session({
-  saveUninitialized:false,
-  resave:true,
-  name:"app.sid",
-  secret: 'heyitsverysecretdonttell',
-  cookie: { 
-    secure: false,
-    path:"/api",
-    maxAge  : 60000,
-  },
+    secret: '2C44-4D44-WppQ38S',
+    resave: true,
+    saveUninitialized: true,
+    cookie:{
+      maxAge:60000
+    }
 }));
-
-app.get('/api', (req, res) =>{
-  console.log('----', req.sessionID)
-})
-app.use('/api', Router);
-
 //******SESSION Handle *//
 
+app.use('/api', Router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

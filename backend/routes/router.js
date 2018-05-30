@@ -5,18 +5,27 @@ const Tasks = require('./tasks');
 var jwt = require('jsonwebtoken');
 var session ={}
 
-const isLoggeIn = (req, res) => {
- if(!req.session.user) {res.status(401).send({message: "Not authorized"}) }
- else true
+// const isLoggeIn = (req, res) => {
+//  if(!session.user_id) {res.status(401).send({message: "Not authorized"}) }
+//  else res.status(200).send({...session, message:"Successfully Loggedin",});
+// }
+
+// session expires
+let sessionExpire = () =>{
+    setTimeout( () => {
+      session = {}
+    }, 1000*50);
 }
+
+
 
 // Auth check
 Router.get('/', (req, res) =>{
-  console.log('auth', req.session)
-  Tasks.authCheck(req, res, (err,rows)=>{
-    if(err) res.status(400).send({message:"Something went wrong"});
-    return res.json(rows);
-  });
+  if(session.user_id){
+    res.status(200).send({...session, message:"Successfully Loggedin",});
+  }else{
+    res.status(200).send({code:401,message: "Not authorized"});
+  }
 });
 
 //Login
@@ -27,8 +36,10 @@ Router.post('/login', function(req,res){
     var token = jwt.sign({ id: rows[0].user_id }, 'heydonttrustme', { 
       expiresIn : 60*60
     });
-    req.session.user = rows[0].user_id;
-    console.log('login', req.session)
+    session.user_id = rows[0].user_id;
+    session.name = rows[0].name;
+    session.email = rows[0].email;
+    sessionExpire()
     res.setHeader('x-access-token',token)
     res.status(200).send({user_id:rows[0].user_id, name:rows[0].name, email:rows[0].email, message:"Successfully Loggedin", token});
   });
@@ -84,7 +95,6 @@ Router.post('/saveProduct', (req,res) => {
 
 //Get All products details
 Router.get('/loadAllPrds', (req, res) =>{
-  console.log(req.session, 123)
   Tasks.loadAllPrds(req, res, (err, rows)=>{
     if(err)return res.status(400).send({message: "Something went wrong"});
     res.status(200).send(rows);
@@ -96,6 +106,7 @@ Router.get('/logout', function(req,res){
  req.session.destroy(function(err) {
     //res.redirect('/hello')
   });
+  session = {}
   res.status(200).send({message: "Logout Successfully"});
 });
 

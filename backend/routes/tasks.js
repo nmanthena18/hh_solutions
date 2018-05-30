@@ -13,7 +13,7 @@ var Tasks={
 	},
 
 	authCheck : (req, res, callback) =>{
-		console.log(1111)
+		
 	},
 
 	signUp:function(req, res, callback){
