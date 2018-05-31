@@ -4,23 +4,26 @@ const cPool = require('../config/connectionPool');
 const Tasks = require('./tasks');
 var jwt = require('jsonwebtoken');
 var session ={}
+var app = express();
 
-// const isLoggeIn = (req, res) => {
-//  if(!session.user_id) {res.status(401).send({message: "Not authorized"}) }
-//  else res.status(200).send({...session, message:"Successfully Loggedin",});
-// }
 
 // session expires
-let sessionExpire = () =>{
-    setTimeout( () => {
-      session = {}
-    }, 1000*50);
-}
+// let sessionExpire = () =>{
+//   setTimeout( () => {
+//     session = {}
+//     console.log('timeout')
+//   }, 2000*20);
+// }
 
+const isLoggeIn = (req, res, next) => {
+ if(!session.user_id) { res.status(200).send({expired:true, code:401,message: "Not authorized"}) }
+ else next();
+}
 
 
 // Auth check
 Router.get('/', (req, res) =>{
+  console.log(session)
   if(session.user_id){
     res.status(200).send({...session, message:"Successfully Loggedin",});
   }else{
@@ -39,14 +42,13 @@ Router.post('/login', function(req,res){
     session.user_id = rows[0].user_id;
     session.name = rows[0].name;
     session.email = rows[0].email;
-    sessionExpire()
     res.setHeader('x-access-token',token)
     res.status(200).send({user_id:rows[0].user_id, name:rows[0].name, email:rows[0].email, message:"Successfully Loggedin", token});
   });
 });
 
 //Register user
-Router.post('/signup', (req, res) =>{
+Router.post('/signup', isLoggeIn, (req, res) =>{
   Tasks.signUp(req, res, (err,rows)=>{
     if(err) res.status(400).send({message:"Something went wrong"});
     return res.json(rows);
@@ -86,7 +88,7 @@ Router.post('/signup', (req, res) =>{
 
 
 //Saving Product
-Router.post('/saveProduct', (req,res) => {
+Router.post('/saveProduct', isLoggeIn, (req,res) => {
   Tasks.saveProduct(req, res, (err, rows) =>{
     if(err) return res.status(400).send({message: "Something went wrong"});
     res.status(200).send({message: "Product Added Successfully", prd_id:rows.insertId});
@@ -94,7 +96,7 @@ Router.post('/saveProduct', (req,res) => {
 });
 
 //Get All products details
-Router.get('/loadAllPrds', (req, res) =>{
+Router.get('/loadAllPrds', isLoggeIn, (req, res) =>{
   Tasks.loadAllPrds(req, res, (err, rows)=>{
     if(err)return res.status(400).send({message: "Something went wrong"});
     res.status(200).send(rows);
@@ -102,50 +104,47 @@ Router.get('/loadAllPrds', (req, res) =>{
 })
 
 //Logout
-Router.get('/logout', function(req,res){
- req.session.destroy(function(err) {
-    //res.redirect('/hello')
-  });
-  session = {}
+Router.get('/logout', isLoggeIn, function(req,res){
+  session = {};
   res.status(200).send({message: "Logout Successfully"});
 });
 
-Router.post('/editProduct', function(req, res){
+Router.post('/editProduct', isLoggeIn, function(req, res){
   Tasks.editProduct(req, res, (err, rows)=>{
     if(err)return res.status(400).send({message: "Something went wrong"});
     res.status(200).send(rows);
   })
 });
 
-Router.post('/updateProduct', function(req, res){
+Router.post('/updateProduct', isLoggeIn, function(req, res){
   Tasks.updateProduct(req, res, (err, rows)=>{
     if(err)return res.status(400).send({message: "Something went wrong"});
     res.status(200).send({message: "Product Updated Successfully", prd_id:rows.insertId});
   })
 });
 
-Router.post('/getProductInfo', function(req, res){
+Router.post('/getProductInfo', isLoggeIn, function(req, res){
   Tasks.getProductInfo(req, res, (err, rows)=>{
     if(err)return res.status(400).send({message: "Something went wrong"});
     res.json(rows);
   })
 });
 
-Router.post('/generateInvoice', function(req, res){
+Router.post('/generateInvoice', isLoggeIn, function(req, res){
   Tasks.generateInvoice(req, res, (err, rows)=>{
     if(err)return res.status(400).send({message: "Something went wrong"});
     res.json(rows);
   })
 });
 
-Router.get('/getbillhistory', function(req, res){
+Router.get('/getbillhistory', isLoggeIn, function(req, res){
   Tasks.getBillHistory(req, res, (err, rows)=>{
     if(err)return res.status(400).send({message: "Something went wrong"});
     res.json(rows);
   })
 });
 
-Router.post('/getsinglebillinformation', function(req, res){
+Router.post('/getsinglebillinformation', isLoggeIn, function(req, res){
   Tasks.getSingleBillInformation(req, res, (err, rows)=>{
     if(err)return res.status(400).send({message: "Something went wrong"});
     res.json(rows);

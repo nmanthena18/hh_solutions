@@ -11,11 +11,6 @@ var Tasks={
 			});
 		});
 	},
-
-	authCheck : (req, res, callback) =>{
-		
-	},
-
 	signUp:function(req, res, callback){
 		let data = req.body;
 		bcrypt.genSalt(7, function(err, salt) {

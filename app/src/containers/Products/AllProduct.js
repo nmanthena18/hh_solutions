@@ -43,10 +43,7 @@ class AllProducts extends Component {
     }
     //if the products not loaded in redux it will called
     loadAllProduct(){
-        let config = {
-            headers: { 'x-access-token': localStorage.getItem("token") },
-          };
-        Axios.get('/api/loadAllPrds').then(res => {
+        Axios.get('/api/loadAllPrds', ).then(res => {
             res.data.map((item, i) => {
                 return  item["prd_created_date"] = new Date(item["prd_created_date"]).toLocaleDateString();
             });

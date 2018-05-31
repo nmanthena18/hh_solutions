@@ -5,10 +5,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 
-var getConnection = require('./backend/config/connectionPool')
+var getConnection = require('./backend/config/connectionPool');
+
+
 
 var app = express();
-
 const Router = require('./backend/routes/router');
 
 app.use(express.static(__dirname + '/app/build'));
@@ -58,7 +59,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //******SESSION Handle *//
 app.use(session({
-    secret: '2C44-4D44-WppQ38S',
+    secret: 'dont-tell-to-anyone-1154',
     resave: true,
     saveUninitialized: true,
     cookie:{
@@ -68,6 +69,7 @@ app.use(session({
 //******SESSION Handle *//
 
 app.use('/api', Router);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

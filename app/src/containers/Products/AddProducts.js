@@ -209,7 +209,8 @@ class AddProduct extends Component {
     }
 
     editProduct = (id) =>{
-        Axios.post('/api/editProduct', {id}, this.config).then(res => {
+        let time = new Date();
+        Axios.post('/api/editProduct', {id}, this.config, time.getTime()).then(res => {
             let formValidation = {...this.state.formValidation}
             for(let key in res.data[0]){
                 //formValidation.key.valid = true;
@@ -229,8 +230,9 @@ class AddProduct extends Component {
     }
 
     updateProduct = () =>{
+        let time = new Date();
         let data = {id: this.state.currentPrdId, form:this.state.form};
-        Axios.post('/api/updateProduct', data, this.config).then(res => {
+        Axios.post('/api/updateProduct', data, this.config, time.getTime()).then(res => {
             let updatdedPrd = this.state.gridData.filter( (v, i) =>{
                 return v.prd_id !== this.state.form.prd_id ;
             });
@@ -246,7 +248,8 @@ class AddProduct extends Component {
     }
 
     saveProduct(){
-        Axios.post('/api/saveProduct', this.state.form, this.config).then(res => {
+        let time = new Date();
+        Axios.post('/api/saveProduct', this.state.form, this.config, time.getTime()).then(res => {
             let newAddedPrd = this.state.form;
             if(res.data.message){
                 newAddedPrd.index = res.data.prd_id;
@@ -270,7 +273,8 @@ class AddProduct extends Component {
 
     //get all products
     loadAllProduct(){
-        Axios.get('/api/loadAllPrds', this.config).then(res => {
+        let time = new Date();
+        Axios.get('/api/loadAllPrds?time='+time.getTime(), this.config).then(res => {
             res.data.map((item, i) => {
                 return  item["prd_created_date"] = new Date(item["prd_created_date"]).toLocaleDateString();
             });
