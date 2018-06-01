@@ -12,9 +12,9 @@ import BillHistory from './containers/Billing/BillHistory';
 import * as actionTypes from './Store/actions';
 import Axios from './Axios';
 
+let timeoutID;
 class App extends Component {
   render() {
-    var timeoutID;
     if(!this.props.auth){
       let d = new Date();
       Axios.get('/api?time='+d.getTime()).then(res =>{
@@ -28,8 +28,7 @@ class App extends Component {
           <Route path='/' exact component={Auth} />
             <Route path={`${process.env.PUBLIC_URL}/register`} component={Signup} />
             <Redirect to="/" />
-        </Switch>)}
-        
+        </Switch>)}        
        
       if(this.props.auth && !this.props.auth.code){
         //Checkin user active
@@ -59,11 +58,6 @@ class App extends Component {
       </BrowserRouter>
     );
   }
-
-  isLoggedIn = () => {
-     // return !this.props.auth ? <Redirect to="/" /> : <Route path='/dashboard' component={ Dashboard } /> 
-  }
-
   componentDidMount(){
     // if user logout check the status
     Axios.interceptors.response.use(res =>{
@@ -74,15 +68,15 @@ class App extends Component {
     });
   }
 
-  // Auto session expried
-   
+  // Auto session expried   
   startTimer  = () => {
-      this.timeoutID = window.setTimeout(this.goInactive, 1000*50);
+    timeoutID = window.setTimeout(this.goInactive, 1000*50);
   }
    
   resetTimer = (e) =>{
-      window.clearTimeout(this.timeoutID); 
-      this.goActive();
+      window.clearTimeout(timeoutID);
+      this.startTimer();
+      console.log(timeoutID)
   }
  
   goInactive = () => {
@@ -91,15 +85,11 @@ class App extends Component {
           this.props.history.push('/');
           localStorage.removeItem('token');
           this.props.logout({expired:true, code:401,message: "Not authorized"});
+          window.clearTimeout(timeoutID);
       }).catch(err =>{
           console.log(err)
       });
   }
-   
-  goActive = () => {   
-      this.startTimer();
-  }
-
 }
 
 const mapStateToProps = (state) =>{
