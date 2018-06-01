@@ -76,7 +76,6 @@ class App extends Component {
   resetTimer = (e) =>{
       window.clearTimeout(timeoutID);
       this.startTimer();
-      console.log(timeoutID)
   }
  
   goInactive = () => {
