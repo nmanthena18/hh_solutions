@@ -42,7 +42,7 @@ class AddProduct extends Component {
             prd_scode:{
                 validation:{
                     required:true,
-                    isNumber:true
+                    isNumber:false
                 },
                 valid:false,
                 touched:false
@@ -73,11 +73,11 @@ class AddProduct extends Component {
             },
             prd_gst:{
                 validation:{
-                    required:true,
-                    isNumber:true,
+                    required:null,
+                    isNumber:false,
                     maxLength:2,
                 },
-                valid:false,
+                valid:true,
                 touched:false
             },
             prd_desc:{
@@ -104,7 +104,7 @@ class AddProduct extends Component {
                     classes="form-control" inpType="text" />
                 <Input name="prd_scode" 
                     placeholder="Enter Product Code"
-                    inputGroupSymbol="Number only"
+                    inputGroupSymbol="Code Start with JS"
                     isInvalid={this.state.formValidation.prd_scode.valid} 
                     touched={this.state.formValidation.prd_scode.touched}
                     change={(e) => {this.changeHandler(e)}}
@@ -186,7 +186,6 @@ class AddProduct extends Component {
                 <DataGrid gridData={this.state.gridData} columns={this.state.columns} edit={this.editProduct} />
                 <br/>
                 <br/>
-
             </Aux>
         )        
     }

@@ -23,7 +23,6 @@ const isLoggeIn = (req, res, next) => {
 
 // Auth check
 Router.get('/', (req, res) =>{
-  console.log(session)
   if(session.user_id){
     res.status(200).send({...session, message:"Successfully Loggedin",});
   }else{
@@ -37,7 +36,7 @@ Router.post('/login', function(req,res){
     if(err) return res.status(400).send({error:err.code, message:err.sqlMessage});
     if(rows.length <= 0) return res.status(400).send({message:"Invalid Credentials"});
     var token = jwt.sign({ id: rows[0].user_id }, 'heydonttrustme', { 
-      expiresIn : 60*60
+      expiresIn : 60*60*24
     });
     session.user_id = rows[0].user_id;
     session.name = rows[0].name;

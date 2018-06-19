@@ -40,7 +40,6 @@ app.get('/', function (req, res) {
     next();
   });
   
-  console.log(process.env.PUBLIC_URL)
 //view engine setup
 //app.set('app', path.join(__dirname, '/app/build'));
 //app.use(express.static(path.join(__dirname, '/app/build/')));

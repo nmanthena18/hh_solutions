@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import './App.css';
 
 import Aux from './hoc/Auxulary';
-import Signup from './containers/Signup/Signup';
+import Signup from './containers/Signup/signup';
 import Auth from './containers/auth/auth';
 import Dashboard from './containers/dashboard/dashboard';
 import Billing from './containers/Billing/Billing';
@@ -25,7 +25,7 @@ class App extends Component {
         if(this.props.auth &&  this.props.auth.code){
         Routes = (
         <Switch>
-          <Route path='/' exact component={Auth} />
+            <Route path='/' exact component={Auth} />
             <Route path={`${process.env.PUBLIC_URL}/register`} component={Signup} />
             <Redirect to="/" />
         </Switch>)}        
@@ -70,7 +70,7 @@ class App extends Component {
 
   // Auto session expried   
   startTimer  = () => {
-    timeoutID = window.setTimeout(this.goInactive, 1000*50);
+    timeoutID = window.setTimeout(this.goInactive, 1000*50000);
   }
    
   resetTimer = (e) =>{
