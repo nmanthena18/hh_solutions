@@ -15,8 +15,9 @@ const Router = require('./backend/routes/router');
 app.use(express.static(__dirname + '/app/build'));
 app.engine('html', require('ejs').renderFile);
 app.get('/', function (req, res) {
-    res.sendFile('index.html');
+  res.sendFile('index.html');
 });
+app.set('view engine', 'html');
 
 //app.use(express.static(__dirname + '/app/build'));
 // app.engine('html', require('ejs').renderFile);
@@ -36,7 +37,7 @@ app.get('/', function (req, res) {
     //res.header("Access-Control-Allow-Headers", "origin");
     res.header("Access-Control-Allow-Headers", "Authorization, Content-Type");
     //res.header("Access-Control-Allow-Credentials", true);
-    res.header("Content-Type", "text/html");
+    res.header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
     next();
   });
   
